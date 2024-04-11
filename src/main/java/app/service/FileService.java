@@ -2,6 +2,7 @@ package app.service;
 
 
 import app.domain.Call;
+import app.domain.File;
 import app.repository.CallRepository;
 import app.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class FileService {
     FileRepository fileRepository;
 
     public void fileRender(String filePath) {
+
+        File file = new File();
+
+
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
