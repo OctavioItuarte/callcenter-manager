@@ -14,6 +14,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static app.controller.FileController.FILE_UPLOAD_PATH;
 
@@ -45,7 +47,8 @@ public class FileService {
                 String[] parts = line.split(",");
 
                 Call call = new Call();
-                call.setDate(LocalDate.parse(parts[0]));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                call.setDate(LocalDateTime.parse(parts[0],formatter));
                 call.setCallerName(parts[1]);
                 call.setCallerNumber(Long.valueOf(parts[2]));
                 call.setCalleeName(parts[3]);
@@ -66,7 +69,7 @@ public class FileService {
             }
 
             file.setRows(count);
-            fileRepository.save(file);
+            fileRepository.saveAndFlush(file);
 
 
         } catch (IOException e) {
