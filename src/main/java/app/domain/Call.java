@@ -3,17 +3,21 @@ package app.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
+import javax.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "`call`")
 public class Call {
 
 
     @Id
     private Long id;
     private LocalDate date;
+    @Size(min = 1, max = 25)
     private String callerName;
     private Long callerNumber;
     private String calleeName;

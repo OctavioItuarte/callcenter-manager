@@ -1,5 +1,6 @@
 package app.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -14,6 +15,7 @@ public class File {
     private Long id;
     private String name;
     private LocalDate uploadDate;
+    @Column(name = "`rows`")
     private Integer rows;
     private boolean hasError;
     @OneToMany(mappedBy = "file")
