@@ -151,4 +151,12 @@ public class Call {
     public void setCallerIpAddress(String callerIpAddress) {
         this.callerIpAddress = callerIpAddress;
     }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
 }

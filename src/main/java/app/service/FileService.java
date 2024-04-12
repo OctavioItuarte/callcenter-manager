@@ -7,6 +7,7 @@ import app.repository.CallRepository;
 import app.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +15,10 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 
+import static app.controller.FileController.FILE_UPLOAD_PATH;
+
 @Service
+@Validated
 public class FileService {
 
     @Autowired
@@ -22,20 +26,24 @@ public class FileService {
     @Autowired
     FileRepository fileRepository;
 
-    public void fileRender(String filePath) {
-
-        File file = new File();
+    public void fileRender(String fileName) {
 
 
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_UPLOAD_PATH + fileName))) {
+
+            File file = new File();
+            file.setUploadDate(LocalDate.now());
+            file.setName(fileName);
             String line;
-            // Lee cada línea del archivo CSV
+            int count = 1;
+
+            fileRepository.save(file);
             while ((line = br.readLine()) != null) {
-                // Separa la línea en sus campos, asumiendo que están separados por comas
+
+                count++;
                 String[] parts = line.split(",");
 
-                // Crea una nueva entidad Call con los datos de la línea y agrégala a la lista
                 Call call = new Call();
                 call.setDate(LocalDate.parse(parts[0]));
                 call.setCallerName(parts[1]);
@@ -52,9 +60,14 @@ public class FileService {
                 call.setPin(Long.valueOf(parts[12]));
                 call.setCallerIpAddress(parts[13]);
 
-
+                call.setFile(file);
+                callRepository.save(call);
 
             }
+
+            file.setRows(count);
+            fileRepository.save(file);
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);

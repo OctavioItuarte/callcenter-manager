@@ -17,7 +17,7 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
-    public final String FILE_UPLOAD_PATH = "src/main/resources/static";
+    public final static String FILE_UPLOAD_PATH = "src/main/resources/static/";
 
 
     public ResponseEntity<?> uploadFile(@RequestParam("csvFile") MultipartFile file) {
@@ -27,7 +27,7 @@ public class FileController {
 
         try {
             file.transferTo( Path.of(FILE_UPLOAD_PATH));
-            fileService.fileRender(FILE_UPLOAD_PATH);
+            fileService.fileRender(file.getName());
             return ResponseEntity.ok("Archivo CSV recibido y procesado correctamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar la imagen");
