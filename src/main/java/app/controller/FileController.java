@@ -28,7 +28,7 @@ public class FileController {
         }
 
         try {
-            file.transferTo( Path.of(FILE_UPLOAD_PATH));
+            file.transferTo( Path.of(FILE_UPLOAD_PATH + file.getName()));
             fileService.fileRender(file.getName());
             return ResponseEntity.ok("Archivo CSV recibido y procesado correctamente");
         } catch (Exception e) {
