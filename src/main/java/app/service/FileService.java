@@ -12,9 +12,9 @@ import org.springframework.validation.annotation.Validated;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static app.controller.FileController.FILE_UPLOAD_PATH;
@@ -31,17 +31,25 @@ public class FileService {
     public void fileRender(String fileName) {
 
 
+        File file = new File();
+        file.setUploadDate(LocalDate.now());
+        file.setName(fileName);
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_UPLOAD_PATH + fileName))) {
 
-            File file = new File();
-            file.setUploadDate(LocalDate.now());
-            file.setName(fileName);
+
             String line;
             int count = 1;
 
+            boolean firstLine = true;
+
             fileRepository.save(file);
             while ((line = br.readLine()) != null) {
+
+                if(firstLine){
+                    firstLine = false;
+                    continue;
+                }
 
                 count++;
                 String[] parts = line.split(",");
@@ -50,18 +58,21 @@ public class FileService {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 call.setDate(LocalDateTime.parse(parts[0],formatter));
                 call.setCallerName(parts[1]);
-                call.setCallerNumber(Long.valueOf(parts[2]));
+                call.setCallerNumber(parts[2]);
                 call.setCalleeName(parts[3]);
                 call.setCalleeNumber(parts[4]);
                 call.setDod(parts[5]);
                 call.setDid(parts[6]);
-                call.setCallDuration(Duration.parse(parts[7]));
-                call.setTalkDuration(Duration.parse(parts[8]));
+                call.setCallDuration(LocalTime.parse(parts[7]));
+                call.setTalkDuration(LocalTime.parse(parts[8]));
                 call.setStatus(parts[9]);
                 call.setSourceTrunk(parts[10]);
-                call.setComunicationType(parts[11]);
-                call.setPin(Long.valueOf(parts[12]));
-                call.setCallerIpAddress(parts[13]);
+                call.setDestinationTrunk(parts[11]);
+                call.setComunicationType(parts[12]);
+                if (parts.length > 13 && !parts[13].isEmpty())
+                    call.setPin(Long.valueOf(parts[13]));
+                if (parts.length > 14 && !parts[14].isEmpty())
+                    call.setCallerIpAddress(parts[14]);
 
                 call.setFile(file);
                 callRepository.save(call);
@@ -73,6 +84,8 @@ public class FileService {
 
 
         } catch (IOException e) {
+            file.setHasError(true);
+            fileRepository.save(file);
             throw new RuntimeException(e);
         }
 
