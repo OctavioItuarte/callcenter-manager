@@ -3,7 +3,6 @@ package app.domain;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.Size;
-import java.time.Duration;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
