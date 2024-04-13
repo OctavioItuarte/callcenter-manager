@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "`call`")
@@ -18,15 +19,16 @@ public class Call {
     private LocalDateTime date;
     @Size(min = 1, max = 25)
     private String callerName;
-    private Long callerNumber;
+    private String callerNumber;
     private String calleeName;
     private String calleeNumber;
     private String dod;
     private String did;
-    private Duration callDuration;
-    private Duration TalkDuration;
+    private LocalTime callDuration;
+    private LocalTime TalkDuration;
     private String status;
     private String sourceTrunk;
+    private String destinationTrunk;
     private String comunicationType;
     private Long pin;
     private String callerIpAddress;
@@ -59,11 +61,11 @@ public class Call {
         this.callerName = callerName;
     }
 
-    public Long getCallerNumber() {
+    public String getCallerNumber() {
         return callerNumber;
     }
 
-    public void setCallerNumber(Long callerNumber) {
+    public void setCallerNumber(String callerNumber) {
         this.callerNumber = callerNumber;
     }
 
@@ -99,19 +101,19 @@ public class Call {
         this.did = did;
     }
 
-    public Duration getCallDuration() {
+    public LocalTime getCallDuration() {
         return callDuration;
     }
 
-    public void setCallDuration(Duration callDuration) {
+    public void setCallDuration(LocalTime callDuration) {
         this.callDuration = callDuration;
     }
 
-    public Duration getTalkDuration() {
+    public LocalTime getTalkDuration() {
         return TalkDuration;
     }
 
-    public void setTalkDuration(Duration talkDuration) {
+    public void setTalkDuration(LocalTime talkDuration) {
         TalkDuration = talkDuration;
     }
 
@@ -129,6 +131,14 @@ public class Call {
 
     public void setSourceTrunk(String sourceTrunk) {
         this.sourceTrunk = sourceTrunk;
+    }
+
+    public String getDestinationTrunk() {
+        return destinationTrunk;
+    }
+
+    public void setDestinationTrunk(String destinationTrunk) {
+        this.destinationTrunk = destinationTrunk;
     }
 
     public String getComunicationType() {
