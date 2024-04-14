@@ -1,0 +1,10 @@
+.centrado{
+    display: flex;
+    background-color: aquamarine;
+    justify-content: center;
+    align-content: center;
+}
+
+.campo{
+    margin-bottom: 5px;
+}
