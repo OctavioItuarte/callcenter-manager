@@ -6,21 +6,33 @@ document.getElementById('seleccionarArchivo').addEventListener('submit', functio
     event.preventDefault();
 
     const fileInput = document.getElementById('myfile');
-    const formData = new FormData();
-    formData.append('archivo', fileInput.files[0]);
+    if (!fileInput.files || fileInput.files.length === 0) {
+        console.error('No se ha seleccionado ningún archivo.');
+        return;
+    }
 
-    fetch(urlDestino+"/files", {
+    const formData = new FormData();
+    formData.append('csvFile', fileInput.files[0]);
+
+    fetch(urlDestino + "/files", {
         method: 'POST',
         body: formData,
     })
-        .then(response => response.json())
-        .then(data => console.log(data))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('La solicitud Fetch no fue exitosa: ' + response.status);
+            }
+            return response.text(); // Manejar la respuesta como texto
+        })
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+        })
         .catch(error => console.error('Error:', error));
 });
 
 async function llamarServer(){
     try{
-        const response = await fetch('http://localhost/8080/files', {
+        const response = await fetch('http://localhost:8080/calls/1', {
             method: 'GET'
         })
             .then(response => response.json())
@@ -41,6 +53,6 @@ function iniciar() {
     tr.appendChild(td);
 
     llamarServer().then(data => {
-        console.log(data); // JSON data parsed by `data.json()` call
+        console.log(data);
     });
 }
