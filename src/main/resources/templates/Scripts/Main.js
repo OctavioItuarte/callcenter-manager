@@ -1,8 +1,22 @@
 document.addEventListener('DOMContentLoaded', iniciar);
 
-function enviarArchivo(){
+const urlDestino="http://localhost:8080";
 
-}
+document.getElementById('seleccionarArchivo').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const fileInput = document.getElementById('myfile');
+    const formData = new FormData();
+    formData.append('archivo', fileInput.files[0]);
+
+    fetch(urlDestino+"/files", {
+        method: 'POST',
+        body: formData,
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+});
 
 async function llamarServer(){
     try{
