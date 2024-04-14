@@ -23,8 +23,8 @@ public class Call {
     private String calleeNumber;
     private String dod;
     private String did;
-    private LocalTime callDuration;
-    private LocalTime TalkDuration;
+    private String callDuration;
+    private String TalkDuration;
     private String status;
     private String sourceTrunk;
     private String destinationTrunk;
@@ -100,19 +100,19 @@ public class Call {
         this.did = did;
     }
 
-    public LocalTime getCallDuration() {
+    public String getCallDuration() {
         return callDuration;
     }
 
-    public void setCallDuration(LocalTime callDuration) {
+    public void setCallDuration(String callDuration) {
         this.callDuration = callDuration;
     }
 
-    public LocalTime getTalkDuration() {
+    public String getTalkDuration() {
         return TalkDuration;
     }
 
-    public void setTalkDuration(LocalTime talkDuration) {
+    public void setTalkDuration(String talkDuration) {
         TalkDuration = talkDuration;
     }
 
