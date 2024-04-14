@@ -1,4 +1,4 @@
-package app.controller;
+package app.controller.apiController;
 
 import app.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/files")
-public class FileController {
+public class ApiFileController {
 
     @Autowired
     private FileService fileService;

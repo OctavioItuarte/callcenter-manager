@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import static app.controller.FileController.FILE_UPLOAD_PATH;
+import static app.controller.apiController.ApiFileController.FILE_UPLOAD_PATH;
 
 @Service
 @Validated

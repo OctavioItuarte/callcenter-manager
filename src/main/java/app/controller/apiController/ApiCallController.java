@@ -1,4 +1,4 @@
-package app.controller;
+package app.controller.apiController;
 
 
 import app.domain.Call;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/calls")
-public class CallController {
+public class ApiCallController {
 
     @Autowired
     CallService callService;
