@@ -63,8 +63,8 @@ public class FileService {
                 call.setCalleeNumber(parts[4]);
                 call.setDod(parts[5]);
                 call.setDid(parts[6]);
-                call.setCallDuration(LocalTime.parse(parts[7]));
-                call.setTalkDuration(LocalTime.parse(parts[8]));
+                call.setCallDuration(parts[7]);
+                call.setTalkDuration(parts[8]);
                 call.setStatus(parts[9]);
                 call.setSourceTrunk(parts[10]);
                 call.setDestinationTrunk(parts[11]);
@@ -86,6 +86,7 @@ public class FileService {
         } catch (IOException e) {
             file.setHasError(true);
             fileRepository.save(file);
+            
             throw new RuntimeException(e);
         }
 
