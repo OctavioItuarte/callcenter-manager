@@ -5,6 +5,7 @@
     align-content: center;
 }
 
-.campo{
+.barra_entrada{
+    display:block;
     margin-bottom: 5px;
 }
