@@ -3,6 +3,8 @@ package app.service;
 
 import app.domain.Call;
 import app.domain.File;
+import app.dto.CallDTO;
+import app.dto.FileDTO;
 import app.repository.CallRepository;
 import app.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static app.controller.apiController.ApiFileController.FILE_UPLOAD_PATH;
 
@@ -27,6 +31,19 @@ public class FileService {
     CallRepository callRepository;
     @Autowired
     FileRepository fileRepository;
+
+    private List<FileDTO> goToDTO(List<File> files) {
+        List<FileDTO> fileDTOs = new ArrayList<>();
+        for (File file : files) {
+            FileDTO fileDTO = new FileDTO(file);
+            fileDTOs.add(fileDTO);
+        }
+        return fileDTOs;
+    }
+
+    public List<FileDTO> getFiles(){
+        return this.goToDTO(fileRepository.findAll());
+    }
 
     public void fileRender(String fileName) {
 
