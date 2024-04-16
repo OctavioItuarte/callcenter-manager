@@ -31,7 +31,7 @@ public class SecurityConfig  {
                         authRequest
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
-                                .requestMatchers("/files/**").hasRole("admin")
+                                .requestMatchers("/files/**").hasAuthority("admin")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager->
