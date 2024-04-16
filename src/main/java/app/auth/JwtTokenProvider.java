@@ -5,7 +5,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -70,6 +69,16 @@ public class JwtTokenProvider implements AuthenticationProvider {
         return claimsJws.getBody().getSubject();
     }
 
+    public String getRoleFromToken(String token) {
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
+                .parseClaimsJws(token);
+
+
+        return (String) claimsJws.getBody().get("role");
+    }
+
     public Collection<? extends GrantedAuthority> getRolesFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
@@ -77,13 +86,10 @@ public class JwtTokenProvider implements AuthenticationProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        // Obtener el rol del token JWT
         String role = (String) claims.get("role");
 
-        // Crear una instancia de SimpleGrantedAuthority con el rol obtenido
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
 
-        // Devolver una colección que contenga el rol como GrantedAuthority
         return Collections.singletonList(authority);
     }
 
@@ -94,7 +100,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
                     .build()
                     .parseClaimsJws(token);
 
-            System.out.println("Todo en orden");
+
             return true;
         } catch (Exception ex) {
 
