@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,22 +19,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtTokenProvider =  jwtTokenProvider;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = getTokenFromRequest(request);
+            System.out.println(token);
             if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+                System.out.println("Octa puto");
                 String nombreUsuario = jwtTokenProvider.getNameUserFromToken(token);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(nombreUsuario, null, null);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("putita");
             }
         } catch (Exception ex) {
             logger.error("Error al procesar la autenticación JWT", ex);
         }
 
+        System.out.println("LLEGUE!!");
         filterChain.doFilter(request, response);
     }
 
