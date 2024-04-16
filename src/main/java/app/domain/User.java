@@ -1,13 +1,11 @@
 package app.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import javax.validation.constraints.Email;
 
 @Entity
+@Table(name = "`user`")
 public class User {
 
     @Id
