@@ -5,6 +5,7 @@ import app.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -31,7 +32,7 @@ public class SecurityConfig  {
                         authRequest
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
-                                .requestMatchers("/files/**").hasAuthority("admin")
+                                .requestMatchers(HttpMethod.POST, "/files/**").hasAuthority("admin")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager->
