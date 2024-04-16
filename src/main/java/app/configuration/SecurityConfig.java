@@ -1,35 +1,50 @@
 package app.configuration;
 
+import app.auth.JwtAuthenticationFilter;
+import app.auth.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig  {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/public/**").permitAll() // Permitir acceso público a ciertas rutas
-                .antMatchers("/admin/**").hasRole("ADMIN") // Requiere rol ADMIN para rutas de administrador
-                .anyRequest().authenticated() // Requiere autenticación para cualquier otra ruta
-                .and()
-                .formLogin() // Configurar el formulario de inicio de sesión
-                .loginPage("/login") // Página de inicio de sesión personalizada
-                .permitAll() // Permitir acceso público al formulario de inicio de sesión
-                .and()
-                .logout() // Configurar la funcionalidad de cierre de sesión
-                .logoutUrl("/logout") // URL para cerrar sesión
-                .permitAll(); // Permitir acceso público a la URL de cierre de sesión
-    }
-
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtTokenProvider authProvider;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
+    {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authRequest ->
+                        authRequest
+                                .requestMatchers("/register").permitAll()
+                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/files/**").hasRole("admin")
+                                .anyRequest().authenticated()
+                )
+                .sessionManagement(sessionManager->
+                        sessionManager
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+
+
+    }
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
