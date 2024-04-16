@@ -12,7 +12,9 @@ import javax.naming.AuthenticationException;
 @Service
 public class AuthService {
 
+    @Autowired
     private UserRepository userRepository;
+
     private PasswordEncoder passwordEncoder;
     private JwtTokenProvider jwtTokenProvider;
 
