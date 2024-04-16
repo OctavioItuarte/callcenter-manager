@@ -2,6 +2,7 @@ package app.controller.apiController;
 
 
 import app.domain.Call;
+import app.dto.CallDTO;
 import app.service.CallService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,7 @@ public class ApiCallController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCallsByFileId(@PathVariable Long id) {
-        List<Call> calls = callService.getCallsByFileId(id);
+        List<CallDTO> calls = callService.getCallsByFileId(id);
         if (calls.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
