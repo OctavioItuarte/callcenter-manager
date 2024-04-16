@@ -26,19 +26,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = getTokenFromRequest(request);
-            System.out.println(token);
             if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-                System.out.println("Octa puto");
                 String nombreUsuario = jwtTokenProvider.getNameUserFromToken(token);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(nombreUsuario, null, null);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("putita");
             }
         } catch (Exception ex) {
             logger.error("Error al procesar la autenticación JWT", ex);
         }
 
-        System.out.println("LLEGUE!!");
         filterChain.doFilter(request, response);
     }
 

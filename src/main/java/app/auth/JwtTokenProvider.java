@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
-import static app.auth.SecretGenerator.generateSecretKey;
 
 @Component
 public class JwtTokenProvider implements AuthenticationProvider {
@@ -35,13 +34,9 @@ public class JwtTokenProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String token = (String) authentication.getCredentials();
-        System.out.println("HOLA SOY GOKU");
         if (!validateToken(token)) {
             return null;
         }
-
-        System.out.println("Vegeta!!!!");
-
         String userName = getNameUserFromToken(token);
         Collection<? extends GrantedAuthority> authorities = getRolesFromToken(token);
         return new UsernamePasswordAuthenticationToken(userName, token, authorities);
