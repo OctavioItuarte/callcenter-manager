@@ -38,12 +38,11 @@ public class ApiFileController {
         }
 
         try {
-            file.transferTo( Path.of(FILE_UPLOAD_PATH + file.getName()));
-            fileService.fileRender(file.getName());
+            file.transferTo( Path.of(FILE_UPLOAD_PATH + file.getOriginalFilename()));
+            fileService.fileRender(file.getOriginalFilename());
             return ResponseEntity.ok("Archivo CSV recibido y procesado correctamente");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo" + " " + e.getMessage());
         }
     }
 
