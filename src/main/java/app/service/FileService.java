@@ -3,7 +3,6 @@ package app.service;
 
 import app.domain.Call;
 import app.domain.File;
-import app.dto.CallDTO;
 import app.dto.FileDTO;
 import app.repository.CallRepository;
 import app.repository.FileRepository;
@@ -12,11 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +50,8 @@ public class FileService {
         File file = new File();
         file.setUploadDate(LocalDate.now());
         file.setName(fileName);
+        file.setHasError(false);
+        file.setArchived(false);
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_UPLOAD_PATH + fileName))) {
 
@@ -63,13 +64,26 @@ public class FileService {
             fileRepository.save(file);
             while ((line = br.readLine()) != null) {
 
+                String[] parts = line.split(",");
                 if(firstLine){
                     firstLine = false;
                     continue;
                 }
 
+                boolean allEmpty = true;
+                for (String part : parts) {
+                    if (!part.trim().isEmpty()) {
+                        allEmpty = false;
+                        break;
+                    }
+                }
+
+                if (allEmpty) {
+                    break; //
+                }
+
                 count++;
-                String[] parts = line.split(",");
+
 
                 Call call = new Call();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -102,10 +116,20 @@ public class FileService {
 
         } catch (IOException e) {
             file.setHasError(true);
+            file.setArchived(true);
             fileRepository.save(file);
             
             throw new RuntimeException(e);
         }
 
     }
+
+    public void toggleArchivedStatus(Long fileId) throws FileNotFoundException {
+        File file = fileRepository.findById(fileId).orElseThrow(() -> new FileNotFoundException("No existe un file con ese id " + fileId));
+
+        file.setArchived(!file.isArchived());
+
+        fileRepository.save(file);
+    }
 }
+
