@@ -1,9 +1,19 @@
 class DynamicTable{
 
     //arreglo contents de objetos "Call"
-    DynamicTable(){
+    constructor(){
         this.contents=[];
     }
+
+    addContents(array){
+        this.contents= [...this.contents, ...array];
+        return this.contents;
+    }
+
+    getSize(){
+        return this.contents.length;
+    }
+
     getName(){
         return this.name;
     }
@@ -13,27 +23,29 @@ class DynamicTable{
     addContent(content){
         this.contents.push(content);
     }
-    getContent(index){
-        if(index>=0 && index<this.contents.length)
-            return this.contents[index];
-        return null;
+    getContent(){
+        return this.contents;
     }
+
     getContentByFilter(comparable, value, columnName){
-
         let compare= (e) =>{
-            if(comparable === "greater")
-                return e > value;
-            else if(comparable === "greater/equals")
-                return e >= value;
-            else if (comparable === "lower")
-                return e < value;
-            else if(comparable === "lower/equals")
-                return e <= value;
-            else if(comparable === "equals")
-                return e === value;
-            return false;
+            if(columnName!="" && e.hasOwnProperty(columnName)){
+                var value2 = e[columnName];
+                if(comparable==null)
+                    return value2 === value;
+                if(comparable === "mayor")
+                    return value2 > value;
+                else if (comparable === "menor")
+                    return value2 < value;
+                else if(comparable === "igual")
+                    return value2 === value;
+                else if(comparable === "content")
+                    return value2.includes(value);
+                return false;
+            }
         }
-
         return this.contents.filter(compare);
     }
+
 }
+export default DynamicTable;

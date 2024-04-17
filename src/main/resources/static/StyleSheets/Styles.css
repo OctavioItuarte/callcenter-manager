@@ -5,7 +5,10 @@
     align-content: center;
 }
 
-.barra_entrada{
-    display:block;
-    margin-bottom: 5px;
+.tipo_entrada{
+    display:flex;
+}
+
+#selecComparador{
+    display:none;
 }
