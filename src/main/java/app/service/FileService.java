@@ -46,6 +46,9 @@ public class FileService {
 
     public void fileRender(String fileName) {
 
+        if (fileRepository.existsByName(fileName)) {
+            throw new IllegalArgumentException("Ya existe un archivo con el nombre '" + fileName + "'");
+        }
 
         File file = new File();
         file.setUploadDate(LocalDate.now());
@@ -59,7 +62,7 @@ public class FileService {
             String line;
             int count = 1;
 
-            boolean firstLine = true;
+            boolean firstLine = true;Ah
 
             fileRepository.save(file);
             while ((line = br.readLine()) != null) {
