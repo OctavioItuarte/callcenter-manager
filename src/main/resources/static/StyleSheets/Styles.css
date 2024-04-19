@@ -5,6 +5,14 @@
     align-content: center;
 }
 
+.titulo-principal {
+    font-size: 2rem;
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff; /
+}
+
+
 .tipo_entrada{
     display:flex;
 }
