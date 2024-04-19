@@ -8600,8 +8600,30 @@ function generarIndiceTabla(tabla){
 
 function generarContenidoTabla(dynamicTable, tabla){
     let div, td, tr;
-    document.getElementById("cantidadFilas").textContent=dynamicTable.length + " filas";
-    dynamicTable.forEach((call) => {
+    generarIndiceTabla(tabla);
+
+    let filterContent, opcionSelec, valueInput;
+    let select = document.getElementById('select');
+    opcionSelec = select.options[select.selectedIndex];
+    //dynamicTable.reorder("talkDuration", 1);
+
+    if(select.value==="seleccione")
+        filterContent = dynamicTable.getContent();
+
+    else
+    if(opcionSelec.dataset.type==="comparable"){
+        let valueSelected = document.getElementById('selecComparador').value;
+        valueInput = document.getElementById('barra_entrada').value;
+        filterContent = dynamicTable.getContentByFilter(valueSelected, valueInput, opcionSelec.value);
+    }
+    else
+    if(opcionSelec.dataset.type==="noComparable"){
+        valueInput = document.getElementById('barra_entrada').value;
+        filterContent = dynamicTable.getContentByFilter("content", valueInput, opcionSelec.value);
+    }
+    document.getElementById("cantidadFilas").textContent=filterContent.length + " filas";
+
+    filterContent.forEach((call) => {
         tr= document.createElement("tr");
         let values=Object.entries(call);
         values.forEach(([clave, valor]) =>
@@ -8615,27 +8637,55 @@ function generarContenidoTabla(dynamicTable, tabla){
         });
         tabla.appendChild(tr);
     });
-
+    addEventOrder(dynamicTable, tabla);
+    addEventFilter(dynamicTable, tabla);
+    addEventSelectComparador();
+    addEventMostrarColumnas(tabla);
 }
 
-function addEventOrder(dynamicTable, order, tabla){
+let orders={
+    "date": 0,
+    "callerName":0,
+    "callerNumber":0,
+    "calleeName":0,
+    "calleeNumber":0,
+    "dod":0,
+    "did":0,
+    "callDuration":0,
+    "talkDuration":0,
+    "status":0,
+    "sourceTrunk":0,
+    "destinationTrunk":0,
+    "communicationType":0,
+    "pin":0,
+    "callerIPAddress":0
+}
+
+function addEventOrder(dynamicTable, tabla){
     //order es un entero, (negativo es descendente) (positivo es ascendente)
     console.log(document.querySelectorAll(".indiceTabla"));
     document.querySelectorAll(".indiceTabla").forEach(elem=>{
         elem.addEventListener("click", e=>{
+            let columnName=elem.classList[1];
+            let order=orders[columnName];
+            console.log(orders[columnName]);
             if(order<=0){
                 //console.log(elem.classList[1]);
                 order=1;
-                dynamicTable.reorder(elem.classList[1], order);
+                dynamicTable.reorder(columnName, order);
             }
             else{
                 order=-1;
-                dynamicTable.reorder(elem.classList[1], order);
+                dynamicTable.reorder(columnName, order);
             }
+            orders[columnName]=order;
+            Object.keys(orders).forEach(clave=>{
+                if(clave!=columnName)
+                    orders[clave]=0;
+            });
+            limpiarTabla(tabla);
+            generarContenidoTabla(dynamicTable, tabla);
         });
-        limpiarTabla(tabla);
-        generarIndiceTabla(tabla);
-        generarContenidoTabla(dynamicTable.getContent(), tabla);
     });
 }
 
@@ -8648,28 +8698,9 @@ function limpiarTabla(tabla){
 function addEventFilter(dynamicTable, tabla){
     document.getElementById('filter').addEventListener('submit', (e)=>{
         e.preventDefault();
-        let filterContent, opcionSelec, valueInput;
-        let select = document.getElementById('select');
-        opcionSelec = select.options[select.selectedIndex];
-        //dynamicTable.reorder("talkDuration", 1);
 
-        if(select.value==="seleccione")
-            filterContent = dynamicTable.getContent();
-
-        else
-        if(opcionSelec.dataset.type==="comparable"){
-            let valueSelected = document.getElementById('selecComparador').value;
-            valueInput = document.getElementById('barra_entrada').value;
-            filterContent = dynamicTable.getContentByFilter(valueSelected, valueInput, opcionSelec.value);
-        }
-        else
-        if(opcionSelec.dataset.type==="noComparable"){
-            valueInput = document.getElementById('barra_entrada').value;
-            filterContent = dynamicTable.getContentByFilter("content", valueInput, opcionSelec.value);
-        }
         limpiarTabla(tabla);
-        generarIndiceTabla(tabla);
-        generarContenidoTabla(filterContent, tabla);
+        generarContenidoTabla(dynamicTable, tabla);
     });
 }
 
@@ -8710,11 +8741,6 @@ function iniciar() {
         .then(data => {
             let array=procesarData(data);
             dynamicTable.addContents(array);
-            generarContenidoTabla(dynamicTable.getContent(), tabla);
+            generarContenidoTabla(dynamicTable, tabla);
         });
-    generarIndiceTabla(tabla);
-    addEventOrder(dynamicTable, order, tabla);
-    addEventFilter(dynamicTable, tabla);
-    addEventSelectComparador();
-    addEventMostrarColumnas(tabla);
 }
