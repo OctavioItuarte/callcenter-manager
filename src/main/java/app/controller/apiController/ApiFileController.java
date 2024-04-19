@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -37,12 +38,21 @@ public class ApiFileController {
         }
 
         try {
-            file.transferTo( Path.of(FILE_UPLOAD_PATH + file.getName()));
-            fileService.fileRender(file.getName());
+            file.transferTo( Path.of(FILE_UPLOAD_PATH + file.getOriginalFilename()));
+            fileService.fileRender(file.getOriginalFilename());
             return ResponseEntity.ok("Archivo CSV recibido y procesado correctamente");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo" + " " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("archived/{fileId}")
+    public ResponseEntity<?> archiveFile(@PathVariable Long fileId) {
+        try {
+            fileService.toggleArchivedStatus(fileId);
+            return ResponseEntity.ok().body("Estado del archivo cambiado correctamente");
+        } catch (FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" No existe un archivo con el id " + fileId);
         }
     }
 }

@@ -2,7 +2,6 @@ package app.domain;
 
 import jakarta.persistence.*;
 
-import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "`user`")

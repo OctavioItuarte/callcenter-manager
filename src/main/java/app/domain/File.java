@@ -15,6 +15,7 @@ public class File {
     private LocalDate uploadDate;
     @Column(name = "`rows`")
     private Integer rows;
+    private boolean archived;
     private boolean hasError;
     @OneToMany(mappedBy = "file")
     private Set<Call> calls;
@@ -50,6 +51,14 @@ public class File {
 
     public void setRows(Integer rows) {
         this.rows = rows;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public boolean isHasError() {
