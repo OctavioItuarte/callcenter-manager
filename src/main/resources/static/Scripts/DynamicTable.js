@@ -47,5 +47,24 @@ class DynamicTable{
         return this.contents.filter(compare);
     }
 
+    reorder(column, orden){
+        let compare=(a, b)=>{
+            if(orden>0){
+                if(a[column]<b[column])
+                    return -1;
+                if(a[column]>b[column])
+                    return 1;
+            }
+            if(orden<0){
+                if(a[column]<b[column])
+                    return 1;
+                if(a[column]>b[column])
+                    return -1;
+            }
+            else return 0;
+        }
+        return this.contents.sort(compare);
+    }
+
 }
 export default DynamicTable;

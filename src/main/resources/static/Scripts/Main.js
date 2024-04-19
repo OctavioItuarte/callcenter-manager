@@ -8551,35 +8551,108 @@ async function llamarServer(){
     }
 }
 
-function iniciar() {
-    "use strict"
+const columnNames={
+    "date": "Time",
+    "callerName":"Caller Name",
+    "callerNumber":"Caller Number",
+    "calleeName":"Callee Name",
+    "calleeNumber":"Callee Number",
+    "dod":"DOD",
+    "did":"DID",
+    "callDuration":"Call Duration",
+    "talkDuration":"Talk Duration",
+    "status":"Status",
+    "sourceTrunk":"Source Trunk",
+    "destinationTrunk":"Destination Trunk",
+    "communicationType":"Comunication Type",
+    "pin":"PIN Code",
+    "callerIPAddress":"Caller IP Address"
+}
 
-    let tabla = document.getElementById("tabla");
-    let tr, td;
-    let dynamicTable = new DynamicTable();
-    let filterContent, opcionSelec, valueInput;
-    let select = document.getElementById('select');
-    select.addEventListener('change', (e) => {
-        opcionSelec = select.options[select.selectedIndex];
-        if(opcionSelec.dataset.type==="comparable")
-            document.getElementById('selecComparador').style.display = "block";
-        else
-            document.getElementById('selecComparador').style.display = "none";
+
+function procesarData(data){
+    let resultado=[];
+    data.forEach( (e) =>{
+        resultado.push({});
+        let datoNuevo=resultado[resultado.length-1];
+        Object.keys(columnNames).forEach((clave)=>{
+            datoNuevo[clave]=e[clave];
+        });
+    });
+    return resultado;
+}
+
+function generarIndiceTabla(tabla){
+    let tr = document.createElement("tr");
+    let td, div;
+    Object.entries(columnNames).forEach(([clave,valor]) => {
+
+        td= document.createElement("td");
+        div=document.createElement("div");
+        div.textContent=valor;
+        div.classList.add("indiceTabla");
+        td.appendChild(div);
+        tr.appendChild(td);
+        div.classList.add(clave);
+    });
+    tabla.appendChild(tr);
+}
+
+function generarContenidoTabla(dynamicTable, tabla){
+    let div, td, tr;
+    document.getElementById("cantidadFilas").textContent=dynamicTable.length + " filas";
+    dynamicTable.forEach((call) => {
+        tr= document.createElement("tr");
+        let values=Object.entries(call);
+        values.forEach(([clave, valor]) =>
+        {
+            td= document.createElement("td");
+            div=document.createElement("div");
+            div.textContent=valor;
+            td.appendChild(div);
+            tr.appendChild(td);
+            div.classList.add(clave);
+        });
+        tabla.appendChild(tr);
     });
 
-    llamarServer()
-        .then(data => {
-            dynamicTable.addContents(data);
-        });
+}
 
+function addEventOrder(dynamicTable, order, tabla){
+    //order es un entero, (negativo es descendente) (positivo es ascendente)
+    console.log(document.querySelectorAll(".indiceTabla"));
+    document.querySelectorAll(".indiceTabla").forEach(elem=>{
+        elem.addEventListener("click", e=>{
+            if(order<=0){
+                //console.log(elem.classList[1]);
+                order=1;
+                dynamicTable.reorder(elem.classList[1], order);
+            }
+            else{
+                order=-1;
+                dynamicTable.reorder(elem.classList[1], order);
+            }
+        });
+        limpiarTabla(tabla);
+        generarIndiceTabla(tabla);
+        generarContenidoTabla(dynamicTable.getContent(), tabla);
+    });
+}
+
+function limpiarTabla(tabla){
+    while (tabla.firstChild) {
+        tabla.removeChild(tabla.firstChild);
+    }
+}
+
+function addEventFilter(dynamicTable, tabla){
     document.getElementById('filter').addEventListener('submit', (e)=>{
         e.preventDefault();
+        let filterContent, opcionSelec, valueInput;
+        let select = document.getElementById('select');
+        opcionSelec = select.options[select.selectedIndex];
+        //dynamicTable.reorder("talkDuration", 1);
 
-        while (tabla.firstChild) {
-            tabla.removeChild(tabla.firstChild);
-        }
-
-        document.getElementById('selecComparador').style.display = "none";
         if(select.value==="seleccione")
             filterContent = dynamicTable.getContent();
 
@@ -8594,30 +8667,54 @@ function iniciar() {
             valueInput = document.getElementById('barra_entrada').value;
             filterContent = dynamicTable.getContentByFilter("content", valueInput, opcionSelec.value);
         }
-
-        let data = dynamicTable.getContent();
-        if(data.length!=0){
-            tr= document.createElement("tr");
-            var claves = Object.keys(data[0]);
-            claves.forEach(clave => {
-                td= document.createElement("td");
-                td.textContent=clave;
-                tr.appendChild(td);
-            })
-            tabla.appendChild(tr);
-        }
-        document.getElementById("cantidadFilas").textContent=filterContent.length + " filas";
-        filterContent.forEach((call) => {
-                tr= document.createElement("tr");
-                let values=Object.values(call);
-                values.forEach(value =>
-                {
-                    td= document.createElement("td");
-                    td.textContent=value;
-                    tr.appendChild(td);
-                });
-                tabla.appendChild(tr);
-            }
-        );
+        limpiarTabla(tabla);
+        generarIndiceTabla(tabla);
+        generarContenidoTabla(filterContent, tabla);
     });
+}
+
+function addEventSelectComparador(){
+    select.addEventListener('change', (e) => {
+        let select = document.getElementById('select');
+        let opcionSelec;
+        opcionSelec = select.options[select.selectedIndex];
+        if(opcionSelec.dataset.type==="comparable")
+            document.getElementById('selecComparador').style.display = "block";
+        else
+            document.getElementById('selecComparador').style.display = "none";
+    });
+}
+
+function addEventMostrarColumnas(tabla){
+    let selectMostrar=document.getElementById('selectMostrar');
+    selectMostrar.addEventListener('click', (e) => {
+        let optionMostrar=selectMostrar.options[selectMostrar.selectedIndex];
+        tabla.querySelectorAll("."+optionMostrar.value).forEach(elem=>{
+            if(elem.style.display==="none")
+                elem.style.display="block";
+            else
+                elem.style.display="none";
+        });
+        selectMostrar.selectedIndex=0;
+    });
+}
+
+function iniciar() {
+    "use strict"
+
+    let tabla = document.getElementById("tabla");
+    let dynamicTable = new DynamicTable();
+    let order=0;
+
+    llamarServer()
+        .then(data => {
+            let array=procesarData(data);
+            dynamicTable.addContents(array);
+            generarContenidoTabla(dynamicTable.getContent(), tabla);
+        });
+    generarIndiceTabla(tabla);
+    addEventOrder(dynamicTable, order, tabla);
+    addEventFilter(dynamicTable, tabla);
+    addEventSelectComparador();
+    addEventMostrarColumnas(tabla);
 }

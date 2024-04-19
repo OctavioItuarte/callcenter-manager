@@ -12,3 +12,7 @@
 #selecComparador{
     display:none;
 }
+
+.indiceTabla::after{
+    content: "→";
+}
