@@ -9,7 +9,7 @@
     font-size: 2rem;
     text-align: center;
     padding: 20px 0;
-    border-bottom: 2px solid #007bff; /
+    border-bottom: 2px solid #007bff; 
 }
 
 
@@ -23,4 +23,8 @@
 
 .indiceTabla::after{
     content: "→";
+}
+
+#credentials{
+    min-height: 500px;
 }

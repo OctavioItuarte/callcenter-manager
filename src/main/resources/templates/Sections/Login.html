@@ -7,20 +7,25 @@
     <title>Login</title>
 </head>
 <body>
-<header>
+<header class = "titulo-principal">
     Registros telefonicos de USICOM
 </header>
 
-<main>
-    <form id="credentials">
-        <input id="user" type="text" placeholder="Ingrese usuario"/>
-        <input id="password" type="text" placeholder="Ingrese contraseña"/>
-        <button type="submit">
-            <a href="Home.html">
-                Iniciar sesion
-            </a>
-        </button>
-    </form>
+<main class = "container">
+    <div class="container-sm mt-3 d-flex justify-content-center">
+        <form id="credentials" class="bg-light p-4 d-flex flex-column col-lg-6 col-12 justify-content-around rounded-4">
+          <h2 class="text-center mb-4">Iniciar sesión</h2>
+          <div class="form-group">
+            <input id="user" type="text" class="form-control" placeholder="Usuario" required>
+          </div>
+          <div class="form-group text-center">
+            <input id="password" type="password" class="form-control" placeholder="Contraseña" required>
+          </div>
+          <div class = "text-center">
+                <button type="submit" class="btn btn-primary btn-block mt-4 ">Iniciar sesión</button>
+         </div>
+        </form>
+      </div>
 </main>
 
 <footer>
