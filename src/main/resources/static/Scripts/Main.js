@@ -8506,34 +8506,36 @@ const urlDestino="http://localhost:8080";
 
 var debug = true;
 
+function FormArchive() {
+    document.getElementById('seleccionarArchivo').addEventListener('submit', function (event) {
+        event.preventDefault();
 
-document.getElementById('seleccionarArchivo').addEventListener('submit', function(event) {
-    event.preventDefault();
+        const fileInput = document.getElementById('myfile');
+        if (!fileInput.files || fileInput.files.length === 0) {
+            console.error('No se ha seleccionado ningún archivo.');
+            return;
+        }
 
-    const fileInput = document.getElementById('myfile');
-    if (!fileInput.files || fileInput.files.length === 0) {
-        console.error('No se ha seleccionado ningún archivo.');
-        return;
-    }
+        const formData = new FormData();
+        formData.append('csvFile', fileInput.files[0]);
 
-    const formData = new FormData();
-    formData.append('csvFile', fileInput.files[0]);
-
-    fetch(urlDestino + "/files", {
-        method: 'POST',
-        body: formData,
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('La solicitud Fetch no fue exitosa: ' + response.status);
-            }
-            return response.text(); // Manejar la respuesta como texto
+        fetch(urlDestino + "/files", {
+            method: 'POST',
+            body: formData,
         })
-        .then(data => {
-            console.log('Respuesta del servidor:', data);
-        })
-        .catch(error => console.error('Error:', error));
-});
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('La solicitud Fetch no fue exitosa: ' + response.status);
+                }
+                return response.text(); // Manejar la respuesta como texto
+            })
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+}
 
 async function llamarServer(){
     if (debug){

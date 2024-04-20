@@ -7,17 +7,17 @@
     <title>Home</title>
 </head>
 <body>
-<header>
+<header class="titulo-principal">
     Registros telefonicos de USICOM
 </header>
 
-<main>
+<main class="container-fluid">
     <div>
-        <h1>Seleccione el tipo de filtro</h1>
+        <h4 class = "text-center mt-5">Seleccione el tipo de filtro</h4>
     </div>
-    <form class="m-4" id="filter">
-        <div class="block-center">
-            <select id="select">
+    <form class = "m-4"  id= "filter">
+        <div class="block-center  d-flex">
+            <select class = "form-select mx-2" id="select">
                 <option value="seleccione" selected>--Seleccione</option>
                 <option class="opcion" value="date" data-type="comparable">Time (YYYY-MM-DD'T'HH:MM:SS)</option>
                 <option class="opcion" value="callerName" data-type="noComparable">Caller Name</option>
@@ -35,46 +35,48 @@
                 <option class="opcion" value="pin" data-type="noComparable">PIN</option>
                 <option class="opcion" value="callerIPAddress" data-type="noComparable">Caller IP Address</option>
             </select>
-            <select id="selecComparador">
+            <select class = "form-select" id="selecComparador">
                 <option value="seleccione" selected>--Seleccione</option>
                 <option class="comparador" value="menor">Menor</option>
                 <option class="comparador" value="igual">Igual</option>
                 <option class="comparador" value="mayor">Mayor</option>
             </select>
-            <input id="barra_entrada" type="text" placeholder="Ingrese valor"/>
-            <button type="submit">Filtrar</button>
-            <select id="selectMostrar">
-                <option id="selecMostrar" value="seleccione" selected>--Seleccione</option>
-                <option class="opcion" value="date">Time</option>
-                <option class="opcion" value="callerName">Caller Name</option>
-                <option class="opcion" value="callerNumber">Caller Number</option>
-                <option class="opcion" value="calleeName">Callee Name</option>
-                <option class="opcion" value="calleeNumber">Callee Number</option>
-                <option class="opcion" value="did">DID</option>
-                <option class="opcion" value="dod">DOD</option>
-                <option class="opcion" value="callDuration">Call Duration</option>
-                <option class="opcion" value="talkDuration">Talk Duration</option>
-                <option class="opcion" value="status">Status</option>
-                <option class="opcion" value="sourceTrunk">Source Trunk</option>
-                <option class="opcion" value="destinationTrunk">Destination Trunk</option>
-                <option class="opcion" value="communicationType">Communication Type</option>
-                <option class="opcion" value="pin">PIN</option>
-                <option class="opcion" value="callerIPAddress">Caller IP Address</option>
+            <input class="form-control mx-2" id="barra_entrada" type="text" placeholder="Ingrese valor"/>
+
+            <select class="form-select mx-2" id = "selectMostrar">
+            <option id="selecMostrar" value="seleccione" selected>--Seleccione</option>
+            <option class="opcion" value="date">Time</option>
+            <option class="opcion" value="callerName">Caller Name</option>
+            <option class="opcion" value="callerNumber">Caller Number</option>
+            <option class="opcion" value="calleeName">Callee Name</option>
+            <option class="opcion" value="calleeNumber">Callee Number</option>
+            <option class="opcion" value="did">DID</option>
+            <option class="opcion" value="dod">DOD</option>
+            <option class="opcion" value="callDuration">Call Duration</option>
+            <option class="opcion" value="talkDuration">Talk Duration</option>
+            <option class="opcion" value="status">Status</option>
+            <option class="opcion" value="sourceTrunk">Source Trunk</option>
+            <option class="opcion" value="destinationTrunk">Destination Trunk</option>
+            <option class="opcion" value="communicationType">Communication Type</option>
+            <option class="opcion" value="pin">PIN</option>
+            <option class="opcion" value="callerIPAddress">Caller IP Address</option>
             </select>
+
+            <button  class="btn btn-primary" type="submit">Filtrar</button>
         </div>
     </form>
 
-    <form id="seleccionarArchivo">
-        <input type="file" id="myfile" name="myfile"/>
-        <button type="submit">Subir Archivo</button>
-    </form>
+
     <div id="cantidadFilas">
 
     </div>
-    <table id="tabla">
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped-columns" id="tabla" >
 
 
-    </table>
+        </table>
+    </div>
 
 </main>
 
