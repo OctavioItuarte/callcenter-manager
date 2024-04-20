@@ -8506,6 +8506,33 @@ const urlDestino="http://localhost:8080";
 
 var debug = true;
 
+(function() {
+    const oldAddEventListener = EventTarget.prototype.addEventListener;
+    const oldRemoveEventListener = EventTarget.prototype.removeEventListener;
+
+    EventTarget.prototype.events = {};
+
+    EventTarget.prototype.addEventListener = function(type, listener, options) {
+        this.events[type] = this.events[type] || [];
+        this.events[type].push({ listener, options });
+        oldAddEventListener.call(this, type, listener, options);
+    };
+
+    EventTarget.prototype.removeEventListener = function(type, listener, options) {
+        if (this.events[type]) {
+            const index = this.events[type].findIndex(item => item.listener === listener);
+            if (index !== -1) {
+                this.events[type].splice(index, 1);
+            }
+        }
+        oldRemoveEventListener.call(this, type, listener, options);
+    };
+
+    EventTarget.prototype.hasEventListener = function(type) {
+        return !!(this.events[type] && this.events[type].length);
+    };
+})();
+
 function FormArchive() {
     document.getElementById('seleccionarArchivo').addEventListener('submit', function (event) {
         event.preventDefault();
@@ -8640,9 +8667,7 @@ function generarContenidoTabla(dynamicTable, tabla){
         tabla.appendChild(tr);
     });
     addEventOrder(dynamicTable, tabla);
-    addEventFilter(dynamicTable, tabla);
-    addEventSelectComparador();
-    addEventMostrarColumnas(tabla);
+
 }
 
 let orders={
@@ -8665,29 +8690,30 @@ let orders={
 
 function addEventOrder(dynamicTable, tabla){
     //order es un entero, (negativo es descendente) (positivo es ascendente)
-    console.log(document.querySelectorAll(".indiceTabla"));
+    //console.log(document.querySelectorAll(".indiceTabla"));
     document.querySelectorAll(".indiceTabla").forEach(elem=>{
-        elem.addEventListener("click", e=>{
-            let columnName=elem.classList[1];
-            let order=orders[columnName];
-            console.log(orders[columnName]);
-            if(order<=0){
-                //console.log(elem.classList[1]);
-                order=1;
-                dynamicTable.reorder(columnName, order);
-            }
-            else{
-                order=-1;
-                dynamicTable.reorder(columnName, order);
-            }
-            orders[columnName]=order;
-            Object.keys(orders).forEach(clave=>{
-                if(clave!=columnName)
-                    orders[clave]=0;
+        //if(!elem.hasEventListener("click")) {
+            elem.addEventListener("click", e => {
+                let columnName = elem.classList[1];
+                let order = orders[columnName];
+                console.log(orders[columnName]);
+                if (order <= 0) {
+                    //console.log(elem.classList[1]);
+                    order = 1;
+                    dynamicTable.reorder(columnName, order);
+                } else {
+                    order = -1;
+                    dynamicTable.reorder(columnName, order);
+                }
+                orders[columnName] = order;
+                Object.keys(orders).forEach(clave => {
+                    if (clave != columnName)
+                        orders[clave] = 0;
+                });
+                limpiarTabla(tabla);
+                generarContenidoTabla(dynamicTable, tabla);
             });
-            limpiarTabla(tabla);
-            generarContenidoTabla(dynamicTable, tabla);
-        });
+        //}
     });
 }
 
@@ -8698,38 +8724,48 @@ function limpiarTabla(tabla){
 }
 
 function addEventFilter(dynamicTable, tabla){
-    document.getElementById('filter').addEventListener('submit', (e)=>{
-        e.preventDefault();
+    let filter=document.getElementById('filter');
+    //if(!filter.hasEventListener("submit")) {
+        filter.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        limpiarTabla(tabla);
-        generarContenidoTabla(dynamicTable, tabla);
-    });
+            limpiarTabla(tabla);
+            generarContenidoTabla(dynamicTable, tabla);
+        });
+    //}
 }
 
 function addEventSelectComparador(){
-    select.addEventListener('change', (e) => {
-        let select = document.getElementById('select');
-        let opcionSelec;
-        opcionSelec = select.options[select.selectedIndex];
-        if(opcionSelec.dataset.type==="comparable")
-            document.getElementById('selecComparador').style.display = "block";
-        else
-            document.getElementById('selecComparador').style.display = "none";
-    });
+    let select = document.getElementById('select');
+    //if(!select.hasEventListener("change")) {
+        select.addEventListener('change', (e) => {
+            let opcionSelec;
+            opcionSelec = select.options[select.selectedIndex];
+            if (opcionSelec.dataset.type === "comparable")
+                document.getElementById('selecComparador').style.display = "block";
+            else
+                document.getElementById('selecComparador').style.display = "none";
+        });
+    //}
 }
+
+
 
 function addEventMostrarColumnas(tabla){
     let selectMostrar=document.getElementById('selectMostrar');
-    selectMostrar.addEventListener('click', (e) => {
-        let optionMostrar=selectMostrar.options[selectMostrar.selectedIndex];
-        tabla.querySelectorAll("."+optionMostrar.value).forEach(elem=>{
-            if(elem.style.display==="none")
-                elem.style.display="block";
-            else
-                elem.style.display="none";
+    console.log(document.getElementById('selectMostrar'));
+    //if(!selectMostrar.hasEventListener("click")) {
+        selectMostrar.addEventListener('click', (e) => {
+            let optionMostrar = selectMostrar.options[selectMostrar.selectedIndex];
+            tabla.querySelectorAll("." + optionMostrar.value).forEach(elem => {
+                if (elem.style.display === "none")
+                    elem.style.display = "block";
+                else
+                    elem.style.display = "none";
+            });
+            selectMostrar.selectedIndex = 0;
         });
-        selectMostrar.selectedIndex=0;
-    });
+    //}
 }
 
 function iniciar() {
@@ -8745,4 +8781,8 @@ function iniciar() {
             dynamicTable.addContents(array);
             generarContenidoTabla(dynamicTable, tabla);
         });
+
+    addEventSelectComparador();
+    addEventMostrarColumnas(tabla);
+    addEventFilter(dynamicTable, tabla);
 }
