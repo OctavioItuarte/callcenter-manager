@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -18,9 +19,9 @@ public class ApiCallController {
     @Autowired
     CallService callService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getCallsByFileId(@PathVariable Long id) {
-        List<CallDTO> calls = callService.getCallsByFileId(id);
+    @GetMapping("/{name}")
+    public ResponseEntity<?> getCallsByName(@PathVariable String name) throws FileNotFoundException {
+        List<CallDTO> calls = callService.getCallByFileName(name);
         if (calls.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
