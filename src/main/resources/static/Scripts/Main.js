@@ -8535,9 +8535,9 @@ const columnNames={
     "status":"Status",
     "sourceTrunk":"Source Trunk",
     "destinationTrunk":"Destination Trunk",
-    "communicationType":"Comunication Type",
+    "comunicationType":"Communication Type",
     "pin":"PIN Code",
-    "callerIPAddress":"Caller IP Address"
+    "callerIpAddress":"Caller IP Address"
 }
 
 
@@ -8588,6 +8588,8 @@ function generarContenidoTabla(dynamicTable){
         {
             td= document.createElement("td");
             div=document.createElement("div");
+            if(clave==="date")
+                valor=valor.replace("T"," ");
             div.textContent=valor;
             td.appendChild(div);
             tr.appendChild(td);
@@ -8595,7 +8597,6 @@ function generarContenidoTabla(dynamicTable){
         });
         bodyTable.appendChild(tr);
     });
-
 }
 
 let orders={
@@ -8611,14 +8612,13 @@ let orders={
     "status":0,
     "sourceTrunk":0,
     "destinationTrunk":0,
-    "communicationType":0,
+    "comunicationType":0,
     "pin":0,
-    "callerIPAddress":0
+    "callerIpAddress":0
 }
 
 function addEventOrder(dynamicTable){
     //order es un entero, (negativo es descendente) (positivo es ascendente)
-    //console.log(document.querySelectorAll(".indiceTabla"));
     document.querySelectorAll(".indiceTabla").forEach(elem=>{
         elem.addEventListener("click", e => {
             let columnName = elem.classList[1];
@@ -8674,7 +8674,7 @@ function filtrarTabla(dynamicTable){
 
     valor = document.getElementById("selectCom");
     valor = valor.options[valor.selectedIndex].value;
-    dynamicTable.filter("igual", valor.toString(), "communicationType");
+    dynamicTable.filter("igual", valor.toString(), "comunicationType");
 
     valor = document.getElementById("selectSource");
     valor = valor.options[valor.selectedIndex].value;
