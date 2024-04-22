@@ -29,9 +29,11 @@ public class SecurityConfig  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
+
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/").permitAll()
+                                .requestMatchers("/static/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/files/**").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.PATCH, "/files/**").hasAuthority("admin")
                                 .anyRequest().authenticated()
