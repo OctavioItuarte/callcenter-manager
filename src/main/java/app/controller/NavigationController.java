@@ -8,6 +8,8 @@ public class NavigationController {
 
     @GetMapping("/")
     public String home() {
-        return "Sections/Home";
+        return "/Home";
     }
+
+
 }

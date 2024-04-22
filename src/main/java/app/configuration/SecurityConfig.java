@@ -31,6 +31,7 @@ public class SecurityConfig  {
                         authRequest
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
+                                .requestMatchers("/").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/files/**").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.PATCH, "/files/**").hasAuthority("admin")
                                 .anyRequest().authenticated()
