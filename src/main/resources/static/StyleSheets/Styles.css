@@ -17,6 +17,10 @@
     display:flex;
 }
 
+/*input, select {
+    width: 450px !important;
+} **/
+
 #selecComparador{
     display:none;
 }
