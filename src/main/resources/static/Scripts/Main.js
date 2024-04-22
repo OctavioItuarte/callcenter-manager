@@ -8506,64 +8506,6 @@ const urlDestino="http://localhost:8080";
 
 var debug = true;
 
-(function() {
-    const oldAddEventListener = EventTarget.prototype.addEventListener;
-    const oldRemoveEventListener = EventTarget.prototype.removeEventListener;
-
-    EventTarget.prototype.events = {};
-
-    EventTarget.prototype.addEventListener = function(type, listener, options) {
-        this.events[type] = this.events[type] || [];
-        this.events[type].push({ listener, options });
-        oldAddEventListener.call(this, type, listener, options);
-    };
-
-    EventTarget.prototype.removeEventListener = function(type, listener, options) {
-        if (this.events[type]) {
-            const index = this.events[type].findIndex(item => item.listener === listener);
-            if (index !== -1) {
-                this.events[type].splice(index, 1);
-            }
-        }
-        oldRemoveEventListener.call(this, type, listener, options);
-    };
-
-    EventTarget.prototype.hasEventListener = function(type) {
-        return !!(this.events[type] && this.events[type].length);
-    };
-})();
-
-function FormArchive() {
-    document.getElementById('seleccionarArchivo').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const fileInput = document.getElementById('myfile');
-        if (!fileInput.files || fileInput.files.length === 0) {
-            console.error('No se ha seleccionado ningún archivo.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('csvFile', fileInput.files[0]);
-
-        fetch(urlDestino + "/files", {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('La solicitud Fetch no fue exitosa: ' + response.status);
-                }
-                return response.text(); // Manejar la respuesta como texto
-            })
-            .then(data => {
-                console.log('Respuesta del servidor:', data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-}
-
 async function llamarServer(){
     if (debug){
         return jsonData.test
@@ -8611,48 +8553,35 @@ function procesarData(data){
     return resultado;
 }
 
-function generarIndiceTabla(tabla){
-    let tr = document.createElement("tr");
-    let td, div;
+function generarIndiceTabla(){
+    let thead=document.getElementById("headerTable");
+    let th;
+    let div;
+    while (thead.firstChild) {
+        thead.removeChild(thead.firstChild);
+    }
     Object.entries(columnNames).forEach(([clave,valor]) => {
-
-        td= document.createElement("td");
+        th= document.createElement("th");
         div=document.createElement("div");
         div.textContent=valor;
         div.classList.add("indiceTabla");
-        td.appendChild(div);
-        tr.appendChild(td);
+        th.appendChild(div);
+        thead.appendChild(th);
         div.classList.add(clave);
     });
-    tabla.appendChild(tr);
 }
 
-function generarContenidoTabla(dynamicTable, tabla){
+
+function generarContenidoTabla(dynamicTable){
     let div, td, tr;
-    generarIndiceTabla(tabla);
+    let bodyTable=document.getElementById("bodyTable");
 
-    let filterContent, opcionSelec, valueInput;
-    let select = document.getElementById('select');
-    opcionSelec = select.options[select.selectedIndex];
-    //dynamicTable.reorder("talkDuration", 1);
+    let shownContents=dynamicTable.getShownContents();
 
-    if(select.value==="seleccione")
-        filterContent = dynamicTable.getContent();
-
-    else
-    if(opcionSelec.dataset.type==="comparable"){
-        let valueSelected = document.getElementById('selecComparador').value;
-        valueInput = document.getElementById('barra_entrada').value;
-        filterContent = dynamicTable.getContentByFilter(valueSelected, valueInput, opcionSelec.value);
-    }
-    else
-    if(opcionSelec.dataset.type==="noComparable"){
-        valueInput = document.getElementById('barra_entrada').value;
-        filterContent = dynamicTable.getContentByFilter("content", valueInput, opcionSelec.value);
-    }
-    document.getElementById("cantidadFilas").textContent=filterContent.length + " filas";
-
-    filterContent.forEach((call) => {
+    limpiarTabla();
+    document.getElementById("cantidadFilas").textContent=shownContents.length + " filas";
+    console.log(shownContents);
+    shownContents.forEach((call) => {
         tr= document.createElement("tr");
         let values=Object.entries(call);
         values.forEach(([clave, valor]) =>
@@ -8664,9 +8593,8 @@ function generarContenidoTabla(dynamicTable, tabla){
             tr.appendChild(td);
             div.classList.add(clave);
         });
-        tabla.appendChild(tr);
+        bodyTable.appendChild(tr);
     });
-    addEventOrder(dynamicTable, tabla);
 
 }
 
@@ -8688,101 +8616,156 @@ let orders={
     "callerIPAddress":0
 }
 
-function addEventOrder(dynamicTable, tabla){
+function addEventOrder(dynamicTable){
     //order es un entero, (negativo es descendente) (positivo es ascendente)
     //console.log(document.querySelectorAll(".indiceTabla"));
     document.querySelectorAll(".indiceTabla").forEach(elem=>{
-        //if(!elem.hasEventListener("click")) {
-            elem.addEventListener("click", e => {
-                let columnName = elem.classList[1];
-                let order = orders[columnName];
-                console.log(orders[columnName]);
-                if (order <= 0) {
-                    //console.log(elem.classList[1]);
-                    order = 1;
-                    dynamicTable.reorder(columnName, order);
-                } else {
-                    order = -1;
-                    dynamicTable.reorder(columnName, order);
-                }
-                orders[columnName] = order;
-                Object.keys(orders).forEach(clave => {
-                    if (clave != columnName)
-                        orders[clave] = 0;
-                });
-                limpiarTabla(tabla);
-                generarContenidoTabla(dynamicTable, tabla);
+        elem.addEventListener("click", e => {
+            let columnName = elem.classList[1];
+            let order = orders[columnName];
+            console.log(orders[columnName]);
+            if (order <= 0) {
+                order = 1;
+                dynamicTable.reorder(columnName, order);
+            } else {
+                order = -1;
+                dynamicTable.reorder(columnName, order);
+            }
+            orders[columnName] = order;
+            Object.keys(orders).forEach(clave => {
+                if (clave != columnName)
+                    orders[clave] = 0;
             });
-        //}
+            generarContenidoTabla(dynamicTable);
+        });
     });
 }
 
-function limpiarTabla(tabla){
-    while (tabla.firstChild) {
-        tabla.removeChild(tabla.firstChild);
+function limpiarTabla(){
+    let tbody=document.getElementById("bodyTable");
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
     }
 }
 
-function addEventFilter(dynamicTable, tabla){
-    let filter=document.getElementById('filter');
-    //if(!filter.hasEventListener("submit")) {
-        filter.addEventListener('submit', (e) => {
-            e.preventDefault();
+function filtrarTabla(dynamicTable){
 
-            limpiarTabla(tabla);
-            generarContenidoTabla(dynamicTable, tabla);
-        });
-    //}
+    document.getElementById("cantHorasCallee").textContent="";
+
+    let valor = document.getElementById("barra_entrada_date1").value;
+    dynamicTable.filter("mayor", valor.toString(), "date");
+
+    valor = document.getElementById("barra_entrada_date2").value;
+    dynamicTable.filter("menor", valor.toString(), "date");
+
+    valor = document.getElementById("barra_entrada_call_from").value;
+    dynamicTable.filter("igual", valor.toString(), "callerNumber");
+
+    valor = document.getElementById("barra_entrada_call_to").value;
+    dynamicTable.filter("igual", valor.toString(), "calleeNumber");
+    let calleeNumber=valor;
+
+    valor = document.getElementById("barra_entrada_waiting_time").value;
+    dynamicTable.filter("diferencia", valor.toString(), "callDuration");
+
+    valor = document.getElementById("selectStatus");
+    valor = valor.options[valor.selectedIndex].value;
+    dynamicTable.filter("igual", valor.toString(), "status");
+
+    valor = document.getElementById("selectCom");
+    valor = valor.options[valor.selectedIndex].value;
+    dynamicTable.filter("igual", valor.toString(), "communicationType");
+
+    valor = document.getElementById("selectSource");
+    valor = valor.options[valor.selectedIndex].value;
+    dynamicTable.filter("igual", valor.toString(), "sourceTrunk");
+
+    if(calleeNumber!=""){
+        let time=dynamicTable.getWaitingTime();
+        document.getElementById("cantHorasCallee").textContent=calleeNumber+" tuvo "+time+" de tiempo de demora";
+    }
+    /*
+        let opcionSelec, valueInput;
+        let select = document.getElementById('select');
+        opcionSelec = select.options[select.selectedIndex];
+
+        if(select.value==="seleccione")
+            filterContent = dynamicTable.getContent();
+        else
+        if(opcionSelec.dataset.type==="comparable"){
+            let valueSelected = document.getElementById('selecComparador').value;
+            valueInput = document.getElementById('barra_entrada').value;
+            filterContent = dynamicTable.getContentByFilter(valueSelected, valueInput, opcionSelec.value);
+        }
+        else
+        if(opcionSelec.dataset.type==="noComparable"){
+            valueInput = document.getElementById('barra_entrada').value;
+            filterContent = dynamicTable.getContentByFilter("content", valueInput, opcionSelec.value);
+        }
+    */
+
 }
 
+function addEventFilter(dynamicTable){
+    let filter=document.getElementById('filter');
+
+    filter.addEventListener('submit', (e) => {
+        e.preventDefault();
+        dynamicTable.deleteFilter();
+        filtrarTabla(dynamicTable);
+        generarContenidoTabla(dynamicTable);
+    });
+
+}
+/*
 function addEventSelectComparador(){
     let select = document.getElementById('select');
-    //if(!select.hasEventListener("change")) {
-        select.addEventListener('change', (e) => {
-            let opcionSelec;
-            opcionSelec = select.options[select.selectedIndex];
-            if (opcionSelec.dataset.type === "comparable")
-                document.getElementById('selecComparador').style.display = "block";
-            else
-                document.getElementById('selecComparador').style.display = "none";
-        });
-    //}
+
+    select.addEventListener('change', (e) => {
+        let opcionSelec;
+        opcionSelec = select.options[select.selectedIndex];
+        if (opcionSelec.dataset.type === "comparable")
+            document.getElementById('selecComparador').style.display = "block";
+        else
+            document.getElementById('selecComparador').style.display = "none";
+    });
+
 }
+*/
 
-
-
-function addEventMostrarColumnas(tabla){
+/*
+function addEventMostrarColumnas(dynamicTable, tabla){
     let selectMostrar=document.getElementById('selectMostrar');
     console.log(document.getElementById('selectMostrar'));
-    //if(!selectMostrar.hasEventListener("click")) {
-        selectMostrar.addEventListener('click', (e) => {
-            let optionMostrar = selectMostrar.options[selectMostrar.selectedIndex];
-            tabla.querySelectorAll("." + optionMostrar.value).forEach(elem => {
-                if (elem.style.display === "none")
-                    elem.style.display = "block";
-                else
-                    elem.style.display = "none";
-            });
-            selectMostrar.selectedIndex = 0;
-        });
-    //}
-}
 
+    selectMostrar.addEventListener('click', (e) => {
+        let optionMostrar = selectMostrar.options[selectMostrar.selectedIndex];
+        tabla.querySelectorAll("." + optionMostrar.value).forEach(elem => {
+            dynamicTable.modificarColumna(optionMostrar.value);
+            generarIndiceTabla(dynamicTable);
+            generarContenidoTabla(dynamicTable);
+        });
+        selectMostrar.selectedIndex = 0;
+    });
+}
+*/
 function iniciar() {
     "use strict"
 
     let tabla = document.getElementById("tabla");
     let dynamicTable = new DynamicTable();
-    let order=0;
 
     llamarServer()
         .then(data => {
             let array=procesarData(data);
             dynamicTable.addContents(array);
-            generarContenidoTabla(dynamicTable, tabla);
+            console.log(dynamicTable);
+            generarIndiceTabla(tabla);
+            addEventOrder(dynamicTable, tabla);
+            generarContenidoTabla(dynamicTable);
         });
 
-    addEventSelectComparador();
-    addEventMostrarColumnas(tabla);
+    //addEventSelectComparador();
+    //addEventMostrarColumnas(dynamicTable, tabla);
     addEventFilter(dynamicTable, tabla);
 }

@@ -9,7 +9,7 @@
     font-size: 2rem;
     text-align: center;
     padding: 20px 0;
-    border-bottom: 2px solid #007bff; 
+    border-bottom: 2px solid #007bff;
 }
 
 
@@ -20,11 +20,14 @@
 #selecComparador{
     display:none;
 }
-
+/*
 .indiceTabla::after{
     content: "→";
-}
+}*/
 
-#credentials{
+#loginForm{
     min-height: 500px;
+}
+#calendars{
+    display:flex;
 }
