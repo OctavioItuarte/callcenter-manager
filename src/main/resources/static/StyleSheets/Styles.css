@@ -35,3 +35,7 @@
 #calendars{
     display:flex;
 }
+
+.hidden {
+    display: none;
+}

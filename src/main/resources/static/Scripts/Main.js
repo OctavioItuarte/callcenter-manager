@@ -8755,6 +8755,12 @@ function iniciar() {
     let tabla = document.getElementById("tabla");
     let dynamicTable = new DynamicTable();
 
+    $(document).ready(function() {
+        $('#filter-toggle').click(function() {
+            $('#elementToToggle').toggle(); // Alternar la visibilidad del elemento
+        });
+    });
+
     llamarServer()
         .then(data => {
             let array=procesarData(data);
