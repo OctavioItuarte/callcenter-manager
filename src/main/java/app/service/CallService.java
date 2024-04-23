@@ -23,7 +23,7 @@ public class CallService {
             callDTO.setTime(call.getTime());
             callDTO.setCallee(call.getCallee());
             callDTO.setCaller(call.getCaller());
-            callDTO.setDestinationTrunk(call.getComunicationType());
+            callDTO.setDestinationTrunk(call.getDestinationTrunk());
             callDTO.setSourceTrunk(call.getSourceTrunk());
             callDTO.setDuration(call.getDuration());
             callDTO.setComunicationType(call.getComunicationType());

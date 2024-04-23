@@ -19,11 +19,11 @@ public class Call {
     @Size(min = 1, max = 25)
     private String caller;
     private String callee;
+    private String sourceTrunk;
+    private String destinationTrunk;
     private String duration;
     private String billingDuration;
     private String disposition;
-    private String sourceTrunk;
-    private String destinationTrunk;
     private String comunicationType;
     private String pinUser;
     @ManyToOne
