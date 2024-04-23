@@ -20,21 +20,16 @@ public class CallService {
         for (Call call : calls) {
             CallDTO callDTO = new CallDTO();
 
-            callDTO.setDate(call.getDate());
-            callDTO.setCallerName(call.getCallerName());
-            callDTO.setCallerNumber(call.getCallerNumber());
-            callDTO.setCalleeName(call.getCalleeName());
-            callDTO.setCalleeNumber(call.getCalleeNumber());
-            callDTO.setDod(call.getDod());
-            callDTO.setDid(call.getDid());
-            callDTO.setCallDuration(call.getCallDuration());
-            callDTO.setTalkDuration(call.getTalkDuration());
-            callDTO.setStatus(call.getStatus());
+            callDTO.setTime(call.getTime());
+            callDTO.setCallee(call.getCallee());
+            callDTO.setCaller(call.getCaller());
+            callDTO.setDestinationTrunk(call.getComunicationType());
             callDTO.setSourceTrunk(call.getSourceTrunk());
-            callDTO.setDestinationTrunk(call.getDestinationTrunk());
+            callDTO.setDuration(call.getDuration());
             callDTO.setComunicationType(call.getComunicationType());
-            callDTO.setPin(call.getPin());
-            callDTO.setCallerIpAddress(call.getCallerIpAddress());
+            callDTO.setDisposition(call.getDisposition());
+            callDTO.setBillingDuration(call.getBillingDuration());
+            callDTO.setPinUser(call.getPinUser());
 
             callDTOs.add(callDTO);
         }
@@ -45,6 +40,10 @@ public class CallService {
 
     public List<CallDTO>getCallsByFileId(Long id){
         return this.goToDTO(this.callRepository.findByFileId(id));
+    }
+
+    public List<CallDTO>getAllCalls(){
+        return this.goToDTO(this.callRepository.findAll());
     }
 
 }

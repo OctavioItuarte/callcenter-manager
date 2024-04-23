@@ -18,6 +18,15 @@ public class ApiCallController {
     @Autowired
     CallService callService;
 
+    @GetMapping("")
+    public ResponseEntity<?> getCalls() {
+        List<CallDTO> calls = callService.getAllCalls();
+        if (calls.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(calls);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getCallsByFileId(@PathVariable Long id) {
         List<CallDTO> calls = callService.getCallsByFileId(id);

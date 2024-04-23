@@ -82,32 +82,25 @@ public class FileService {
                 }
 
                 if (allEmpty) {
-                    break; //
+                    break;
                 }
 
                 count++;
 
 
                 Call call = new Call();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                call.setDate(LocalDateTime.parse(parts[0],formatter));
-                call.setCallerName(parts[1]);
-                call.setCallerNumber(parts[2]);
-                call.setCalleeName(parts[3]);
-                call.setCalleeNumber(parts[4]);
-                call.setDod(parts[5]);
-                call.setDid(parts[6]);
-                call.setCallDuration(parts[7]);
-                call.setTalkDuration(parts[8]);
-                call.setStatus(parts[9]);
-                call.setSourceTrunk(parts[10]);
-                call.setDestinationTrunk(parts[11]);
-                call.setComunicationType(parts[12]);
-                if (parts.length > 13 && !parts[13].isEmpty())
-                    call.setPin(Long.valueOf(parts[13]));
-                if (parts.length > 14 && !parts[14].isEmpty())
-                    call.setCallerIpAddress(parts[14]);
 
+
+                call.setTime((parts[0] .replaceAll("^\"|\"$", "") ));
+                call.setCaller(parts[1] .replaceAll("^\"|\"$", "") );
+                call.setCallee(parts[2] .replaceAll("^\"|\"$", "") );
+                call.setSourceTrunk(parts[3].replaceAll("^\"|\"$", "") );
+                call.setDestinationTrunk(parts[4] .replaceAll("^\"|\"$", "") );
+                call.setDuration(parts[5] .replaceAll("^\"|\"$", "") );
+                call.setBillingDuration(parts[6] .replaceAll("^\"|\"$", "") );
+                call.setDisposition(parts[7] .replaceAll("^\"|\"$", "") );
+                call.setComunicationType(parts[8] .replaceAll("^\"|\"$", "") );
+                call.setPinUser((parts[9] .replaceAll("^\"|\"$", "") ));
                 call.setFile(file);
                 callRepository.save(call);
 
@@ -121,7 +114,11 @@ public class FileService {
             file.setHasError(true);
             file.setArchived(true);
             fileRepository.save(file);
-            
+
+            System.err.println("Se produjo un error al procesar el archivo: " + e.getMessage());
+
+            e.printStackTrace();
+
             throw new RuntimeException(e);
         }
 

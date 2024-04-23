@@ -1,6 +1,5 @@
 package app.controller.apiController;
 
-import app.dto.CallDTO;
 import app.dto.FileDTO;
 import app.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;

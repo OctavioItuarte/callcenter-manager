@@ -3,109 +3,73 @@ package app.dto;
 import app.domain.Call;
 
 
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class CallDTO {
 
-    private LocalDateTime date;
-
-    private String callerName;
-    private String callerNumber;
-    private String calleeName;
-    private String calleeNumber;
-    private String dod;
-    private String did;
-    private String callDuration;
-    private String TalkDuration;
-    private String status;
+    private String time;
+    @Size(min = 1, max = 25)
+    private String caller;
+    private String callee;
+    private String duration;
+    private String billingDuration;
+    private String disposition;
     private String sourceTrunk;
     private String destinationTrunk;
     private String comunicationType;
-    private Long pin;
-    private String callerIpAddress;
+    private String pinUser;
 
     public CallDTO() {
 
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public String getTime() {
+        return time;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public String getCallerName() {
-        return callerName;
+    public String getCaller() {
+        return caller;
     }
 
-    public void setCallerName(String callerName) {
-        this.callerName = callerName;
+    public void setCaller(String caller) {
+        this.caller = caller;
     }
 
-    public String getCallerNumber() {
-        return callerNumber;
+    public String getCallee() {
+        return callee;
     }
 
-    public void setCallerNumber(String callerNumber) {
-        this.callerNumber = callerNumber;
+    public void setCallee(String callee) {
+        this.callee = callee;
     }
 
-    public String getCalleeName() {
-        return calleeName;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setCalleeName(String calleeName) {
-        this.calleeName = calleeName;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
-    public String getCalleeNumber() {
-        return calleeNumber;
+    public String getBillingDuration() {
+        return billingDuration;
     }
 
-    public void setCalleeNumber(String calleeNumber) {
-        this.calleeNumber = calleeNumber;
+    public void setBillingDuration(String billingDuration) {
+        this.billingDuration = billingDuration;
     }
 
-    public String getDod() {
-        return dod;
+    public String getDisposition() {
+        return disposition;
     }
 
-    public void setDod(String dod) {
-        this.dod = dod;
-    }
-
-    public String getDid() {
-        return did;
-    }
-
-    public void setDid(String did) {
-        this.did = did;
-    }
-
-    public String getCallDuration() {
-        return callDuration;
-    }
-
-    public void setCallDuration(String callDuration) {
-        this.callDuration = callDuration;
-    }
-
-    public String getTalkDuration() {
-        return TalkDuration;
-    }
-
-    public void setTalkDuration(String talkDuration) {
-        TalkDuration = talkDuration;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDisposition(String disposition) {
+        this.disposition = disposition;
     }
 
     public String getSourceTrunk() {
@@ -132,19 +96,11 @@ public class CallDTO {
         this.comunicationType = comunicationType;
     }
 
-    public Long getPin() {
-        return pin;
+    public String getPinUser() {
+        return pinUser;
     }
 
-    public void setPin(Long pin) {
-        this.pin = pin;
-    }
-
-    public String getCallerIpAddress() {
-        return callerIpAddress;
-    }
-
-    public void setCallerIpAddress(String callerIpAddress) {
-        this.callerIpAddress = callerIpAddress;
+    public void setPinUser(String pinUser) {
+        this.pinUser = pinUser;
     }
 }
