@@ -12,6 +12,8 @@
 <header th:include="Header.html" class = "titulo-principal"></header>
 
 <main class="container-fluid">
+
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
         <div>
             <h4 class = "text-center mt-5">Seleccione el tipo de filtro</h4>
         </div>
@@ -83,7 +85,7 @@
 
             <div id="cantidadFilas"></div>
             <div id="cantHorasCallee"></div>
-    <div id="cantHorasSourceTrunk"></div>
+        <div id="cantHorasSourceTrunk"></div>
                                     
    
         <div class="table-responsive">
@@ -97,6 +99,12 @@
             </table>
             
         </div>
+    </div>
+
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+
+        <div th:include="Login.html"> </div>
+    </div>
 </main>
 
     <footer th:include = "Footer.html">

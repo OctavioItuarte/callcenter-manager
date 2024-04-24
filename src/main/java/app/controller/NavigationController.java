@@ -11,5 +11,10 @@ public class NavigationController {
         return "/Home";
     }
 
+    @GetMapping("/uploadArchive")
+    public String formArchived() {
+        return "/Form";
+    }
+
 
 }
