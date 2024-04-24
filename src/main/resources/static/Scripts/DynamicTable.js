@@ -51,12 +51,27 @@ class DynamicTable{
         while (num.length < size) num = "0" + num;
         return num;
     }
+    cantHorasSourceTrunk(){
+        let seg=0;
+        this.shownContents.forEach(e=>{
+            var time1=e["duration"];
+            seg+=(parseInt(time1));
+        });
+        console.log(seg);
+        let hora=Math.floor(seg/3600);
+        let min=Math.floor(((seg)/60)%60);
+        seg=seg-hora*3600-min*60;
+        //hora=pad(hora, 2);
+        min=this.pad(min, 2);
+        seg=this.pad(seg, 2);
+        return hora.toString()+":"+min.toString()+":"+seg.toString();
+    }
     getWaitingTime(){
         let seg=0;
         this.shownContents.forEach(e=>{
-            var time1=e["callDuration"].split(":");
-            var time2=e["talkDuration"].split(":");
-            seg+=((parseInt(time1[0])-parseInt(time2[0]))*60*60)+((parseInt(time1[1])-parseInt(time2[1]))*60)+((parseInt(time1[2])-parseInt(time2[2])));
+            var time1=e["duration"];
+            var time2=e["billingDuration"];
+            seg+=(parseInt(time1)-parseInt(time2));
         });
         console.log(seg);
         let hora=Math.floor(seg/3600);
@@ -85,9 +100,9 @@ class DynamicTable{
                 else if(comparable === "content")
                     return value2.includes(value);
                 else if(comparable === "diferencia"){
-                    var time1=e["callDuration"].split(":");
-                    var time2=e["talkDuration"].split(":");
-                    var result=((parseInt(time1[0])-parseInt(time2[0]))*60*60)+((parseInt(time1[1])-parseInt(time2[1]))*60)+((parseInt(time1[2])-parseInt(time2[2])));
+                    var time1=e["duration"];
+                    var time2=e["billingDuration"];
+                    var result=((parseInt(time1)-parseInt(time2))*60*60)+((parseInt(time1)-parseInt(time2))*60)+((parseInt(time1)-parseInt(time2)));
                     return (result>=value);
                 }
             }
