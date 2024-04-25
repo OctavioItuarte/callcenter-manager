@@ -11,15 +11,20 @@
 
 <header th:include="Header.html" class = "titulo-principal"></header>
 
-<div th:if="${#authorization.expression('isAuthenticated() and hasAuthority(''admin'')')}">
-    <form class="m-4" id="seleccionarArchivo">
-        <input type="file" id="myfile" name="myfile"/>
-        <button type="submit">Subir Archivo</button>
+<div class="container-sm mt-3 d-flex justify-content-center" th:if="${rol == 'admin'}">
+    <form class="m-4" id="seleccionarArchivo" enctype="multipart/form-data">
+        <div class="form-group">
+            <h3> Elija un archivo para subir</h3>
+            <input type="file" class="form-control mt-4" id="myfile" name="myfile">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block max-width-300 mx-auto mt-4">Subir Archivo</button>
+        </div>
     </form>
 </div>
 
-<!-- Si el usuario no está autenticado o no es admin, mostrar un mensaje -->
-<div th:unless="${#authorization.expression('isAuthenticated() and hasAuthority(''admin'')')}">
+
+<div th:unless="${rol == 'admin'}">
     <div class="alert alert-warning m-4" role="alert">
         USTED NO ES ADMINISTRADOR, NO TE PASES DE LISTO
     </div>
