@@ -32,7 +32,7 @@ public class AuthService {
             throw new AuthenticationException("Correo electrónico o contraseña incorrectos");
         }
 
-        return jwtTokenProvider.generateToken(user.getName(), user.getRol());
+        return jwtTokenProvider.generateToken(user.getName(), user.getRol(), user.getTrunk());
     }
 
 
