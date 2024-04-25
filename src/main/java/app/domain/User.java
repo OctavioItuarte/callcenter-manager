@@ -14,6 +14,7 @@ public class User {
     private String password;
     private String email;
     private String rol;
+    private String trunk;
 
     public void setId(Long id) {
         this.id = id;
@@ -53,5 +54,13 @@ public class User {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getTrunk() {
+        return trunk;
+    }
+
+    public void setTrunk(String trunk) {
+        this.trunk = trunk;
     }
 }
