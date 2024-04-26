@@ -9,7 +9,7 @@ async function llamarServer(){
     //usado para cargar el token desde POSTMAN
     if (debug){
         //let token = prompt("introduci el token:");
-        let token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJndWlsbGVybW8iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTM5NzY3NzAsImV4cCI6MTcxMzk4MDM3MH0.1R5AR7zR3iZMV1i6YmVNfzDT71n4Ugls6dZO1EWmI9XXtmt4mbgMHvpT-u5_ny6n"
+        let token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJndWlsbGVybW8iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTQxMDExMzQsImV4cCI6MTcxNDEwNDczNH0.VAHg59P9HSr5XAOS-JoL-0TB2sG6_-_XUPneI8BdGVHlYCQQZP9QkLJ9lFKkgcj-"
         try{
             const response = await fetch(urlDestino+'/calls/1', {
                 method: 'GET',
@@ -19,6 +19,7 @@ async function llamarServer(){
 
             })
                 let data = await response.json();
+
             return (data);
         }
         catch (error){
@@ -55,7 +56,6 @@ const columnNames={
     "pinUser": "Pin User"
 }
 
-
 function procesarData(data){
     let resultado=[];
     data.forEach( (e) =>{
@@ -71,42 +71,50 @@ function procesarData(data){
 function generarIndiceTabla(){
     let thead=document.getElementById("headerTable");
     let th;
-    let div;
-    while (thead.firstChild) {
-        thead.removeChild(thead.firstChild);
-    }
+    //let div;
+    thead.remove();
+    thead=document.createElement("thead");
+    thead.id="headerTable";
+    let tabla=document.getElementById("tabla");
+    tabla.prepend(thead);
     Object.entries(columnNames).forEach(([clave,valor]) => {
         th= document.createElement("th");
-        div=document.createElement("div");
-        div.textContent=valor;
-        div.classList.add("indiceTabla");
-        th.appendChild(div);
+        //div=document.createElement("div");
+        th.textContent=valor;
+        th.classList.add("indiceTabla");
+        //th.appendChild(div);
         thead.appendChild(th);
-        div.classList.add(clave);
+        th.classList.add(clave);
     });
 }
 
-
 function generarContenidoTabla(dynamicTable){
-    let div, td, tr;
+    let td, tr;
     let bodyTable=document.getElementById("bodyTable");
 
-    let shownContents=dynamicTable.getShownContents();
+    bodyTable.remove();
+    bodyTable=document.createElement("tbody");
+    bodyTable.id="bodyTable";
+    let tabla=document.getElementById("tabla");
+    tabla.appendChild(bodyTable);
+    let shownContents=dynamicTable.getElementosPaginaActual();
 
-    limpiarTabla();
-    document.getElementById("cantidadFilas").textContent=shownContents.length + " filas";
+    document.getElementById("page-number").textContent=dynamicTable.getNumPagina().toString();
+    document.getElementById("page-max").textContent=dynamicTable.getCantidadPaginas().toString();
+    document.getElementById("cantidadFilas").textContent="Resultado total "+(dynamicTable.getShownContents().length).toString()+" filas";
     console.log(shownContents);
+
     shownContents.forEach((call) => {
         tr= document.createElement("tr");
         let values=Object.entries(call);
         values.forEach(([clave, valor]) =>
         {
             td= document.createElement("td");
-            div=document.createElement("div");
-            div.textContent=valor;
-            td.appendChild(div);
+            //div=document.createElement("div");
+            td.textContent=valor;
+            //td.appendChild(div);
             tr.appendChild(td);
-            div.classList.add(clave);
+            td.classList.add(clave);
         });
         bodyTable.appendChild(tr);
     });
@@ -149,9 +157,10 @@ function addEventOrder(dynamicTable){
     });
 }
 
-function limpiarTabla(){
-    let tbody=document.getElementById("bodyTable");
-    while (tbody.firstChild) {
+function limpiarTabla(idElemento){
+    let elemento=document.getElementById(idElemento);
+    elemento.remove();
+    while (elemento.firstChild) {
         tbody.removeChild(tbody.firstChild);
     }
 }
@@ -161,10 +170,10 @@ function filtrarTabla(dynamicTable){
     document.getElementById("cantHorasCallee").textContent="";
 
     let valor = document.getElementById("barra_entrada_date1").value;
-    dynamicTable.filter("mayor", valor.toString(), "time");
+    dynamicTable.filter("mayor", valor.toString().replace('T', " "), "time");
 
     valor = document.getElementById("barra_entrada_date2").value;
-    dynamicTable.filter("menor", valor.toString(), "time");
+    dynamicTable.filter("menor", valor.toString().replace('T', " "), "time");
 
     valor = document.getElementById("barra_entrada_call_from").value;
     dynamicTable.filter("igual", valor.toString(), "caller");
@@ -197,7 +206,6 @@ function filtrarTabla(dynamicTable){
         let time=dynamicTable.getWaitingTime();
         document.getElementById("cantHorasCallee").textContent=callee+" tuvo "+time+" de tiempo de demora";
     }
-
 }
 
 function addEventFilter(dynamicTable){
@@ -209,10 +217,47 @@ function addEventFilter(dynamicTable){
         document.getElementById("cantHorasSourceTrunk").textContent="";
         dynamicTable.deleteFilter();
         filtrarTabla(dynamicTable);
+        dynamicTable.resetNumPagina();
         console.log(dynamicTable.getShownContents().length);
         generarContenidoTabla(dynamicTable);
     });
+}
 
+function addEventPasarPagina(dynamicTable){
+    document.getElementById("pagAnterior").addEventListener("click", e=>{
+        let pageNumber=dynamicTable.getNumPagina();
+        if(pageNumber>1){
+            dynamicTable.setNumPagina(pageNumber-1);
+            generarContenidoTabla(dynamicTable);
+        }
+    });
+    document.getElementById("pagSiguiente").addEventListener("click", e=>{
+        let pageNumber=dynamicTable.getNumPagina();
+        let pageMax=dynamicTable.getCantidadPaginas();
+        if(pageNumber<pageMax){
+            dynamicTable.setNumPagina(pageNumber+1);
+            generarContenidoTabla(dynamicTable);
+        }
+    });
+    document.getElementById("ultimaPagina").addEventListener("click", e=>{
+        dynamicTable.setNumPagina(dynamicTable.getCantidadPaginas());
+        generarContenidoTabla(dynamicTable);
+    });
+    document.getElementById("primerPagina").addEventListener("click", e=>{
+        dynamicTable.resetNumPagina();
+        generarContenidoTabla(dynamicTable);
+    });
+}
+
+function addEventPageLimit(dynamicTable){
+    let select=document.getElementById("cantLlamadasXPagina");
+    select.addEventListener("change", e=>{
+        let limite=select.options[select.selectedIndex].value;
+        dynamicTable.setCantElementosPagina(parseInt(limite));
+        console.log(limite);
+        dynamicTable.setNumPagina(1);
+        generarContenidoTabla(dynamicTable);
+    });
 }
 
 /*
@@ -231,21 +276,22 @@ function addEventMostrarColumnas(dynamicTable, tabla){
     });
 }
 */
-function iniciar() {
+async function iniciar() {
     "use strict"
 
     let tabla = document.getElementById("tabla");
     let dynamicTable = new DynamicTable();
 
-    llamarServer()
-        .then(data => {
-            let array=procesarData(data);
-            dynamicTable.addContents(array);
-            console.log(dynamicTable);
-            generarIndiceTabla(tabla);
-            addEventOrder(dynamicTable, tabla);
-            generarContenidoTabla(dynamicTable);
-        });
+    let data= await llamarServer();
+
+    let array=procesarData(data);
+    dynamicTable.addContents(array);
+    console.log(dynamicTable);
+    generarIndiceTabla(tabla);
+    addEventOrder(dynamicTable, tabla);
+    generarContenidoTabla(dynamicTable);
     //addEventMostrarColumnas(dynamicTable, tabla);
     addEventFilter(dynamicTable, tabla);
+    addEventPasarPagina(dynamicTable);
+    addEventPageLimit(dynamicTable);
 }

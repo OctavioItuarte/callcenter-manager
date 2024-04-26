@@ -81,22 +81,37 @@
             </div>
         </form>
 
-            <div id="cantidadFilas"></div>
-            <div id="cantHorasCallee"></div>
+    <div id="cantidadFilas"></div>
+    <div id="cantHorasCallee"></div>
     <div id="cantHorasSourceTrunk"></div>
-                                    
-   
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped-columns" id="tabla" >
-                <thead id="headerTable">
 
-                </thead>
-                <tbody id="bodyTable">
-                </tbody>
+    <div id="pagination">
+        <button id="primerPagina"><<</button>
+        <button id="pagAnterior"><</button>
+        <span id="page-number"></span><span> de </span><span id="page-max"></span>
+        <button id="pagSiguiente">></button>
+        <button id="ultimaPagina">>></button>
+        <select id="cantLlamadasXPagina">
+            <option class="optionCant" value="10">10</option>
+            <option class="optionCant" value="50">50</option>
+            <option class="optionCant" value="100">100</option>
+            <option class="optionCant" value="150">150</option>
+            <option class="optionCant" value="200">200</option>
+            <option class="optionCant" value="300" selected>300</option>
 
-            </table>
-            
-        </div>
+        </select>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped-columns" id="tabla" >
+            <thead id="headerTable">
+
+            </thead>
+            <tbody id="bodyTable">
+            </tbody>
+
+        </table>
+    </div>
+
 </main>
 
     <footer th:include = "Footer.html">

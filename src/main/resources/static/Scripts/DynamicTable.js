@@ -5,6 +5,8 @@ class DynamicTable{
         this.contents=[];
         this.shownContents=[];
         this.visibleHeader=[];
+        this.paginaActual=1;
+        this.cantElementosPagina=300;
     }
 
     addContents(array){
@@ -102,7 +104,7 @@ class DynamicTable{
                 else if(comparable === "diferencia"){
                     var time1=e["duration"];
                     var time2=e["billingDuration"];
-                    var result=((parseInt(time1)-parseInt(time2))*60*60)+((parseInt(time1)-parseInt(time2))*60)+((parseInt(time1)-parseInt(time2)));
+                    var result=parseInt(time1)-parseInt(time2);
                     return (result>=value);
                 }
             }
@@ -129,9 +131,8 @@ class DynamicTable{
             else return 0;
         }
         this.shownContents=this.shownContents.sort(compare);
-        return this.shownContents;
     }
-
+/*
     modificarColumna(columnName){
 
         if(this.visibleHeader.includes(columnName))
@@ -140,6 +141,35 @@ class DynamicTable{
         else
             this.visibleHeader.push(columnName);
 
+    }
+*/
+    resetNumPagina(){
+        if(this.shownContents.length>0)
+            this.paginaActual=1;
+        else this.paginaActual=0;
+    }
+    setNumPagina(valor){
+        if(valor>=0 && valor<=this.getCantidadPaginas())
+            this.paginaActual=valor;
+    }
+    getNumPagina(){
+        return this.paginaActual;
+    }
+    getElementosPaginaActual(){
+        let start=(this.paginaActual-1)*this.cantElementosPagina;
+        console.log(start);
+        let end=start + this.cantElementosPagina;
+        console.log(end);
+        if(end>this.shownContents.length){
+            end=this.shownContents.length;
+        }
+        return this.shownContents.slice(start, end);
+    }
+    setCantElementosPagina(cantidad){
+        this.cantElementosPagina=cantidad;
+    }
+    getCantidadPaginas(){
+        return Math.ceil(this.shownContents.length/this.cantElementosPagina);
     }
 
 }
