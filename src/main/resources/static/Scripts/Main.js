@@ -236,6 +236,29 @@ function addEventPageLimit(dynamicTable){
     });
 }
 
+async function enviarContenidoDescargable(contenido){
+    try {
+        await fetch(urlDestino+'', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: contenido,
+        });
+    } catch (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+    }
+}
+
+function addEventDownload(dynamicTable){
+    document.getElementById("downloadAll").addEventListener("click", e=>{
+        enviarContenidoDescargable(dynamicTable.getShownContents());
+    });
+    document.getElementById("downloadCurrentPage").addEventListener("click", e=>{
+        enviarContenidoDescargable(dynamicTable.getElementosPaginaActual());
+    });
+}
+
 /*
 function addEventMostrarColumnas(dynamicTable, tabla){
     let selectMostrar=document.getElementById('selectMostrar');
@@ -270,4 +293,5 @@ async function iniciar() {
     addEventFilter(dynamicTable, tabla);
     addEventPasarPagina(dynamicTable);
     addEventPageLimit(dynamicTable);
+    addEventDownload(dynamicTable);
 }
