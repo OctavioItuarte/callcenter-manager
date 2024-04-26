@@ -47,13 +47,14 @@ public class JwtTokenProvider implements AuthenticationProvider {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 
-    public String generateToken(String userName, String role) {
+    public String generateToken(String userName, String role, String trunk) {
         Date expirationDate = new Date(System.currentTimeMillis() + jwtExpirationInMs);
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
         return Jwts.builder()
                 .setSubject(userName)
                 .claim("role", role)
+                .claim("trunk", trunk)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(secretKey)
@@ -75,8 +76,16 @@ public class JwtTokenProvider implements AuthenticationProvider {
                 .build()
                 .parseClaimsJws(token);
 
-
         return (String) claimsJws.getBody().get("role");
+    }
+
+    public String getTrunkFromToken(String token){
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
+                .parseClaimsJws(token);
+
+        return (String) claimsJws.getBody().get("trunk");
     }
 
     public Collection<? extends GrantedAuthority> getRolesFromToken(String token) {
