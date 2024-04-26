@@ -25,6 +25,7 @@ function iniciar(){
                 if (!response.ok) {
                     throw new Error('Error en las credenciales');
                 }
+                location.reload();
                 return response.text();
             })
             .then(data => {
