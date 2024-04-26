@@ -15,7 +15,6 @@ public class File {
     private LocalDate uploadDate;
     @Column(name = "`rows`")
     private Integer rows;
-    private String trunk;
     private boolean archived;
     private boolean hasError;
     @OneToMany(mappedBy = "file")
@@ -54,13 +53,6 @@ public class File {
         this.rows = rows;
     }
 
-    public String getTrunk() {
-        return trunk;
-    }
-
-    public void setTrunk(String trunk) {
-        this.trunk = trunk;
-    }
 
     public boolean isArchived() {
         return archived;
