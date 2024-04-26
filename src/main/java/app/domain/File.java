@@ -53,7 +53,6 @@ public class File {
         this.rows = rows;
     }
 
-
     public boolean isArchived() {
         return archived;
     }

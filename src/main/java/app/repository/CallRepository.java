@@ -10,4 +10,6 @@ import java.util.List;
 public interface CallRepository extends JpaRepository<Call, Long> {
 
     List<Call> findByFileId(Long fileId);
+
+    List<Call> findBySourceTrunk(String trunk);
 }

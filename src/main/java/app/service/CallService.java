@@ -38,6 +38,8 @@ public class CallService {
 
     }
 
+    public List<CallDTO> getCallsBySourceTrunk( String trunk) { return this.goToDTO(callRepository.findBySourceTrunk(trunk));}
+
     public List<CallDTO>getCallsByFileId(Long id){
         return this.goToDTO(this.callRepository.findByFileId(id));
     }
