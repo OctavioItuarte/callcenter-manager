@@ -35,6 +35,7 @@ public class SecurityConfig  {
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/static/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/files/**").hasAuthority("admin")
+                                .requestMatchers("/uploadArchive").permitAll()
                                 .requestMatchers(HttpMethod.PATCH, "/files/**").hasAuthority("admin")
                                 .anyRequest().authenticated()
                 )
