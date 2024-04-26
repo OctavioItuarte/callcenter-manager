@@ -3,43 +3,19 @@ import DynamicTable from "../Scripts/DynamicTable.js";
 document.addEventListener('DOMContentLoaded', iniciar);
 
 const urlDestino="http://localhost:8080";
-const debug=true;
 
 async function llamarServer(){
-    //usado para cargar el token desde POSTMAN
-    if (debug){
-        //let token = prompt("introduci el token:");
-        let token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJndWlsbGVybW8iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTQxMDExMzQsImV4cCI6MTcxNDEwNDczNH0.VAHg59P9HSr5XAOS-JoL-0TB2sG6_-_XUPneI8BdGVHlYCQQZP9QkLJ9lFKkgcj-"
-        try{
-            const response = await fetch(urlDestino+'/calls/1', {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-
-            })
-                let data = await response.json();
-
-            return (data);
-        }
-        catch (error){
-            console.log("Hubo un problema con la petición Fetch:" + error.message);
-        }
-    }
-    else {
-        try {
-            const response = await fetch(urlDestino+'/calls/1', {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-
-            })
-            let data = await response.json();
-            return (data);
-        } catch (error) {
-            console.log("Hubo un problema con la petición Fetch:" + error.message);
-        }
+    try {
+        const response = await fetch(urlDestino+'/calls/1', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+        let data = await response.json();
+        return (data);
+    } catch (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
     }
 }
 
