@@ -6,7 +6,7 @@ const urlDestino="http://localhost:8080";
 
 async function llamarServer(){
     try {
-        const response = await fetch(urlDestino+'/calls/1', {
+        const response = await fetch(urlDestino+'/calls', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
