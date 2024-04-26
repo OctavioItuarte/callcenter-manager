@@ -43,8 +43,9 @@ public class ApiCallController {
             calls.addAll(callService.getAllCalls());
         }
         else{
-                this.jwtTokenProvider.getTrunkFromToken(token);
-                calls.addAll( callService.getCallsBySourceTrunk(token));
+                String trunk = this.jwtTokenProvider.getTrunkFromToken(token);
+                System.out.println(trunk);
+                calls.addAll( callService.getCallsBySourceTrunk(trunk));
             }
         if (calls.isEmpty()) {
             return ResponseEntity.notFound().build();
