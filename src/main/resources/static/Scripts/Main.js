@@ -37,8 +37,8 @@ function procesarData(data){
     data.forEach( (e) =>{
         resultado.push({});
         let datoNuevo=resultado[resultado.length-1];
-        Object.keys(columnNames).forEach((clave)=>{
-            datoNuevo[clave]=e[clave];
+        Object.entries(columnNames).forEach(([key, value])=>{
+            datoNuevo[value]=e[key];
         });
     });
     return resultado;
@@ -78,7 +78,6 @@ function generarContenidoTabla(dynamicTable){
     document.getElementById("page-number").textContent=dynamicTable.getNumPagina().toString();
     document.getElementById("page-max").textContent=dynamicTable.getCantidadPaginas().toString();
     document.getElementById("cantidadFilas").textContent="Resultado total "+(dynamicTable.getShownContents().length).toString()+" filas";
-    console.log(shownContents);
 
     shownContents.forEach((call) => {
         tr= document.createElement("tr");
@@ -115,7 +114,6 @@ function addEventOrder(dynamicTable){
         elem.addEventListener("click", e => {
             let columnName = elem.classList[1];
             let order = orders[columnName];
-            console.log(orders[columnName]);
             if (order <= 0) {
                 order = 1;
                 dynamicTable.reorder(columnName, order);
@@ -194,7 +192,6 @@ function addEventFilter(dynamicTable){
         dynamicTable.deleteFilter();
         filtrarTabla(dynamicTable);
         dynamicTable.resetNumPagina();
-        console.log(dynamicTable.getShownContents().length);
         generarContenidoTabla(dynamicTable);
     });
 }
@@ -230,7 +227,6 @@ function addEventPageLimit(dynamicTable){
     select.addEventListener("change", e=>{
         let limite=select.options[select.selectedIndex].value;
         dynamicTable.setCantElementosPagina(parseInt(limite));
-        console.log(limite);
         dynamicTable.setNumPagina(1);
         generarContenidoTabla(dynamicTable);
     });
@@ -252,10 +248,12 @@ async function enviarContenidoDescargable(contenido){
 
 function addEventDownload(dynamicTable){
     document.getElementById("downloadAll").addEventListener("click", e=>{
-        enviarContenidoDescargable(dynamicTable.getShownContents());
+        let data=procesarData(dynamicTable.getShownContents());
+        enviarContenidoDescargable(data);
     });
     document.getElementById("downloadCurrentPage").addEventListener("click", e=>{
-        enviarContenidoDescargable(dynamicTable.getElementosPaginaActual());
+        let data=procesarData(dynamicTable.getElementosPaginaActual());
+        enviarContenidoDescargable(data);
     });
 }
 
@@ -283,9 +281,8 @@ async function iniciar() {
 
     let data= await llamarServer();
 
-    let array=procesarData(data);
-    dynamicTable.addContents(array);
-    console.log(dynamicTable);
+    dynamicTable.addContents(data);
+
     generarIndiceTabla(tabla);
     addEventOrder(dynamicTable, tabla);
     generarContenidoTabla(dynamicTable);

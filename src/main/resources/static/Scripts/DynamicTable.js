@@ -59,7 +59,6 @@ class DynamicTable{
             var time1=e["duration"];
             seg+=(parseInt(time1));
         });
-        console.log(seg);
         let hora=Math.floor(seg/3600);
         let min=Math.floor(((seg)/60)%60);
         seg=seg-hora*3600-min*60;
@@ -75,7 +74,6 @@ class DynamicTable{
             var time2=e["billingDuration"];
             seg+=(parseInt(time1)-parseInt(time2));
         });
-        console.log(seg);
         let hora=Math.floor(seg/3600);
         let min=Math.floor(((seg)/60)%60);
         seg=seg-hora*3600-min*60;
@@ -157,9 +155,7 @@ class DynamicTable{
     }
     getElementosPaginaActual(){
         let start=(this.paginaActual-1)*this.cantElementosPagina;
-        console.log(start);
         let end=start + this.cantElementosPagina;
-        console.log(end);
         if(end>this.shownContents.length){
             end=this.shownContents.length;
         }

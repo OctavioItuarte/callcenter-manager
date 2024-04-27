@@ -8,8 +8,6 @@ function iniciar(){
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        console.log(username);
-        console.log(password);
         fetch(urlDestino+'/login', {
             method: 'POST',
             headers: {
@@ -21,7 +19,6 @@ function iniciar(){
             })
         })
             .then(response => {
-                console.log(response);
                 if (!response.ok) {
                     throw new Error('Error en las credenciales');
                 }
@@ -42,19 +39,20 @@ function iniciar(){
                     }
                 })
                     .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                        return data;
-                    })
-                    .then(html => {
-                        document.body.innerHTML=""; //        TODO muy precario!!!!!!!!
-                        document.body.insertAdjacentHTML('beforeend', html)
-                    })
-                    .catch(error => console.error('Error en la solicitud:', error));
+                /*
+                .then(data => {
+                    console.log(data);
+                    return data;
+                })
+                .then(html => {
+                    document.body.innerHTML=""; //        TODO muy precario!!!!!!!!
+                    document.body.insertAdjacentHTML('beforeend', html)
+                })
+                .catch(error => console.error('Error en la solicitud:', error));
+        })*/
             })
             .catch(error => {
                 console.error('Error durante el login:', error);
             });
-
-});
+    });
 }
