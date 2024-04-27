@@ -233,13 +233,29 @@ function addEventPageLimit(dynamicTable){
 }
 
 async function enviarContenidoDescargable(contenido){
+    let data={};
+    data.data=contenido;
+    console.log(data);
     try {
-        await fetch(urlDestino+'', {
+        let csvContent = await fetch(urlDestino+'/filesProcessor/tocsv', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-            body: contenido,
+            body: JSON.stringify(data),
+        });
+        console.log(csvContent);
+
+        csvContent.text().then(function(text) {
+            let blob = new Blob([text], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "output.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         });
     } catch (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
