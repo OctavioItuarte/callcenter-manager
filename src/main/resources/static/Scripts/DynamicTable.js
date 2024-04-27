@@ -114,16 +114,24 @@ class DynamicTable{
 
     reorder(column, orden){
         let compare=(a, b)=>{
+            if(column==="duration" || column==="billingDuration"){
+                a=parseInt(a[column]);
+                b=parseInt(b[column]);
+            }
+            else{
+                a=a[column];
+                b=b[column];
+            }
             if(orden>0){
-                if(a[column]<b[column])
+                if(a<b)
                     return -1;
-                if(a[column]>b[column])
+                if(a>b)
                     return 1;
             }
             if(orden<0){
-                if(a[column]<b[column])
+                if(a<b)
                     return 1;
-                if(a[column]>b[column])
+                if(a>b)
                     return -1;
             }
             else return 0;
