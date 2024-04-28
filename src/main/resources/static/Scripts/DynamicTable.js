@@ -48,62 +48,28 @@ class DynamicTable{
         this.shownContents=this.contents;
     }
 
-    pad(num, size) {
-        num = num.toString();
-        while (num.length < size) num = "0" + num;
-        return num;
-    }
-    cantHorasSourceTrunk(){
-        let seg=0;
-        this.shownContents.forEach(e=>{
-            var time1=e["duration"];
-            seg+=(parseInt(time1));
-        });
-        let hora=Math.floor(seg/3600);
-        let min=Math.floor(((seg)/60)%60);
-        seg=seg-hora*3600-min*60;
-        //hora=pad(hora, 2);
-        min=this.pad(min, 2);
-        seg=this.pad(seg, 2);
-        return hora.toString()+":"+min.toString()+":"+seg.toString();
-    }
-    getWaitingTime(){
-        let seg=0;
-        this.shownContents.forEach(e=>{
-            var time1=e["duration"];
-            var time2=e["billingDuration"];
-            seg+=(parseInt(time1)-parseInt(time2));
-        });
-        let hora=Math.floor(seg/3600);
-        let min=Math.floor(((seg)/60)%60);
-        seg=seg-hora*3600-min*60;
-        //hora=pad(hora, 2);
-        min=this.pad(min, 2);
-        seg=this.pad(seg, 2);
-        return hora.toString()+":"+min.toString()+":"+seg.toString();
-    }
     filter(comparable, value, columnName){
-        let compare= (e) =>{
-            if(value==="")
-                return true;
+        let compare = (e) => {
+            if (value === "") return true;
 
-            if(columnName!="" && e.hasOwnProperty(columnName)){
-                var value2 = e[columnName];
-                if(comparable==null)
-                    return value2 === value;
-                if(comparable === "mayor")
-                    return value2 > value;
-                else if (comparable === "menor")
-                    return value2 < value;
-                else if(comparable === "igual")
-                    return value2 === value;
-                else if(comparable === "content")
-                    return value2.includes(value);
-                else if(comparable === "diferencia"){
-                    var time1=e["duration"];
-                    var time2=e["billingDuration"];
-                    var result=parseInt(time1)-parseInt(time2);
-                    return (result>=value);
+            if (columnName !== "" && e.hasOwnProperty(columnName)) {
+                let value2 = e[columnName];
+
+                switch (comparable) {
+                    case "mayor":
+                        return value2 > value;
+                    case "menor":
+                        return value2 < value;
+                    case "igual":
+                        return value2 === value;
+                    case "content":
+                        return value2.includes(value);
+                    case "diferencia":
+                        let time1 = parseInt(e["duration"], 10);
+                        let time2 = parseInt(e["billingDuration"], 10);
+                        return (time1 - time2) >= value;
+                    default:
+                        return false;
                 }
             }
             return false;
@@ -113,28 +79,13 @@ class DynamicTable{
     }
 
     reorder(column, orden){
-        let compare=(a, b)=>{
-            if(column==="duration" || column==="billingDuration"){
-                a=parseInt(a[column]);
-                b=parseInt(b[column]);
-            }
-            else{
-                a=a[column];
-                b=b[column];
-            }
-            if(orden>0){
-                if(a<b)
-                    return -1;
-                if(a>b)
-                    return 1;
-            }
-            if(orden<0){
-                if(a<b)
-                    return 1;
-                if(a>b)
-                    return -1;
-            }
-            else return 0;
+        let compare = (a, b) => {
+            let valA = (column === "duration" || column === "billingDuration") ? parseInt(a[column], 10) : a[column];
+            let valB = (column === "duration" || column === "billingDuration") ? parseInt(b[column], 10) : b[column];
+
+            if (valA < valB) return orden > 0 ? -1 : 1;
+            if (valA > valB) return orden > 0 ? 1 : -1;
+            return 0;
         }
         this.shownContents=this.shownContents.sort(compare);
     }

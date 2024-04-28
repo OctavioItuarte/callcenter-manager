@@ -47,7 +47,6 @@ function procesarData(data){
 function generarIndiceTabla(){
     let thead=document.getElementById("headerTable");
     let th;
-    //let div;
     thead.remove();
     thead=document.createElement("thead");
     thead.id="headerTable";
@@ -55,10 +54,8 @@ function generarIndiceTabla(){
     tabla.prepend(thead);
     Object.entries(columnNames).forEach(([clave,valor]) => {
         th= document.createElement("th");
-        //div=document.createElement("div");
         th.textContent=valor;
         th.classList.add("indiceTabla");
-        //th.appendChild(div);
         thead.appendChild(th);
         th.classList.add(clave);
     });
@@ -85,9 +82,7 @@ function generarContenidoTabla(dynamicTable){
         values.forEach(([clave, valor]) =>
         {
             td= document.createElement("td");
-            //div=document.createElement("div");
             td.textContent=valor;
-            //td.appendChild(div);
             tr.appendChild(td);
             td.classList.add(clave);
         });
@@ -108,24 +103,23 @@ let orders={
     "pinUser": 0
 }
 
-function addEventOrder(dynamicTable){
-    //order es un entero, (negativo es descendente) (positivo es ascendente)
-    document.querySelectorAll(".indiceTabla").forEach(elem=>{
-        elem.addEventListener("click", e => {
+function toggleOrder(columnName, orders) {
+    // Invierte el orden actual o lo establece a ascendente si no hay orden o es descendente
+    let currentOrder = orders[columnName];
+    orders[columnName] = currentOrder <= 0 ? 1 : -1;
+    // Restablece todos los otros órdenes a neutral (0)
+    Object.keys(orders).forEach(key => {
+        if (key !== columnName) orders[key] = 0;
+    });
+}
+
+function addEventOrder(dynamicTable) {
+    // Agrega eventos de clic para ordenar las columnas
+    document.querySelectorAll(".indiceTabla").forEach(elem => {
+        elem.addEventListener("click", () => {
             let columnName = elem.classList[1];
-            let order = orders[columnName];
-            if (order <= 0) {
-                order = 1;
-                dynamicTable.reorder(columnName, order);
-            } else {
-                order = -1;
-                dynamicTable.reorder(columnName, order);
-            }
-            orders[columnName] = order;
-            Object.keys(orders).forEach(clave => {
-                if (clave != columnName)
-                    orders[clave] = 0;
-            });
+            toggleOrder(columnName, orders);
+            dynamicTable.reorder(columnName, orders[columnName]);
             generarContenidoTabla(dynamicTable);
         });
     });
@@ -139,46 +133,88 @@ function limpiarTabla(idElemento){
     }
 }
 
-function filtrarTabla(dynamicTable){
+function obtenerValor(selector) {
+    return document.getElementById(selector).value;
+}
 
-    document.getElementById("cantHorasCallee").textContent="";
+function obtenerValorSeleccionado(selector) {
+    const elemento = document.getElementById(selector);
+    return elemento.options[elemento.selectedIndex].value;
+}
 
-    let valor = document.getElementById("barra_entrada_date1").value;
-    dynamicTable.filter("mayor", valor.toString().replace('T', " "), "time");
-
-    valor = document.getElementById("barra_entrada_date2").value;
-    dynamicTable.filter("menor", valor.toString().replace('T', " "), "time");
-
-    valor = document.getElementById("barra_entrada_call_from").value;
-    dynamicTable.filter("igual", valor.toString(), "caller");
-
-    valor = document.getElementById("barra_entrada_call_to").value;
-    dynamicTable.filter("igual", valor.toString(), "callee");
-    let callee=valor;
-
-    valor = document.getElementById("barra_entrada_waiting_time").value;
-    dynamicTable.filter("diferencia", valor.toString(), "duration");
-
-    valor = document.getElementById("selectStatus");
-    valor = valor.options[valor.selectedIndex].value;
-    dynamicTable.filter("igual", valor.toString(), "disposition");
-
-    valor = document.getElementById("selectCom");
-    valor = valor.options[valor.selectedIndex].value;
-    dynamicTable.filter("igual", valor.toString(), "comunicationType");
-
-    valor = document.getElementById("selectSource");
-    valor = valor.options[valor.selectedIndex].value;
-    dynamicTable.filter("igual", valor.toString(), "sourceTrunk");
-    let sourceTrunk=valor;
-
-    if(sourceTrunk!=""){
-        let time=dynamicTable.cantHorasSourceTrunk();
-        document.getElementById("cantHorasSourceTrunk").textContent="La linea "+sourceTrunk+" tuvo "+time+" de tiempo ocupado";
+function aplicarFiltro(dynamicTable, tipo, valor, campo) {
+    if (valor) { // Solo aplicar filtro si hay un valor
+        dynamicTable.filter(tipo, valor, campo);
     }
-    if(callee!=""){
-        let time=dynamicTable.getWaitingTime();
-        document.getElementById("cantHorasCallee").textContent=callee+" tuvo "+time+" de tiempo de demora";
+}
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
+function cantHorasSourceTrunk(dynamicTable){
+    let totalSeconds = 0;
+    dynamicTable.getShownContents().forEach(item => {
+        let duration = parseInt(item["duration"], 10);
+        totalSeconds += duration;
+    });
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds / 60) % 60);
+    let seconds = totalSeconds % 60;
+
+    // Usamos la función 'pad' para asegurar dos dígitos en minutos y segundos
+    minutes = pad(minutes, 2);
+    seconds = pad(seconds, 2);
+
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+function getWaitingTime(dynamicTable) {
+    let totalSeconds = 0;
+    dynamicTable.getShownContents().forEach(item => {
+        let duration = parseInt(item["duration"], 10);
+        let billingDuration = parseInt(item["billingDuration"], 10);
+        totalSeconds += (duration - billingDuration);
+    });
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds / 60) % 60);
+    let seconds = totalSeconds % 60;
+
+    // Asumiendo que 'pad' es una función que añade ceros a la izquierda para tener al menos dos dígitos
+    minutes = pad(minutes, 2);
+    seconds = pad(seconds, 2);
+
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+function filtrarTabla(dynamicTable) {
+    // Limpieza inicial
+    document.getElementById("cantHorasCallee").textContent = "";
+    document.getElementById("cantHorasSourceTrunk").textContent = "";
+
+    // Aplicación de filtros
+    aplicarFiltro(dynamicTable, "mayor", obtenerValor("barra_entrada_date1").replace('T', " "), "time");
+    aplicarFiltro(dynamicTable, "menor", obtenerValor("barra_entrada_date2").replace('T', " "), "time");
+    aplicarFiltro(dynamicTable, "igual", obtenerValor("barra_entrada_call_from"), "caller");
+    aplicarFiltro(dynamicTable, "igual", obtenerValor("barra_entrada_call_to"), "callee");
+    aplicarFiltro(dynamicTable, "diferencia", obtenerValor("barra_entrada_waiting_time"), "duration");
+    aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectStatus"), "disposition");
+    aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectCom"), "comunicationType");
+    aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectSource"), "sourceTrunk");
+
+    // Mostrar información específica si corresponde
+    let sourceTrunk = obtenerValorSeleccionado("selectSource");
+    let callee = obtenerValor("barra_entrada_call_to");
+
+    if (sourceTrunk) {
+        let time = cantHorasSourceTrunk(dynamicTable);
+        document.getElementById("cantHorasSourceTrunk").textContent = "La línea " + sourceTrunk + " tuvo " + time + " de tiempo ocupado";
+    }
+    if (callee) {
+        let time = getWaitingTime(dynamicTable);
+        document.getElementById("cantHorasCallee").textContent = callee + " tuvo " + time + " de tiempo de demora";
     }
 }
 
@@ -192,32 +228,50 @@ function addEventFilter(dynamicTable){
         dynamicTable.deleteFilter();
         filtrarTabla(dynamicTable);
         dynamicTable.resetNumPagina();
-        addChart(dynamicTable);
+        if (myChart) {
+            myChart.destroy();
+            document.getElementById("opcionGrafico").textContent = "Mostrar grafico";
+        }
         generarContenidoTabla(dynamicTable);
     });
 }
 
-function addEventPasarPagina(dynamicTable){
-    document.getElementById("pagAnterior").addEventListener("click", e=>{
-        let pageNumber=dynamicTable.getNumPagina();
-        if(pageNumber>1){
-            dynamicTable.setNumPagina(pageNumber-1);
+function addPaginationEventListeners(dynamicTable) {
+    // Función auxiliar para añadir manejadores de eventos de forma segura
+    function addEventListenerSafely(selector, eventType, handler) {
+        const element = document.getElementById(selector);
+        if (element) {
+            element.addEventListener(eventType, handler);
+        }
+    }
+
+    // Manija de la página anterior
+    addEventListenerSafely("pagAnterior", "click", () => {
+        let pageNumber = dynamicTable.getNumPagina();
+        if (pageNumber > 1) {
+            dynamicTable.setNumPagina(pageNumber - 1);
             generarContenidoTabla(dynamicTable);
         }
     });
-    document.getElementById("pagSiguiente").addEventListener("click", e=>{
-        let pageNumber=dynamicTable.getNumPagina();
-        let pageMax=dynamicTable.getCantidadPaginas();
-        if(pageNumber<pageMax){
-            dynamicTable.setNumPagina(pageNumber+1);
+
+    // Manija de la página siguiente
+    addEventListenerSafely("pagSiguiente", "click", () => {
+        let pageNumber = dynamicTable.getNumPagina();
+        let pageMax = dynamicTable.getCantidadPaginas();
+        if (pageNumber < pageMax) {
+            dynamicTable.setNumPagina(pageNumber + 1);
             generarContenidoTabla(dynamicTable);
         }
     });
-    document.getElementById("ultimaPagina").addEventListener("click", e=>{
+
+    // Manija de la última página
+    addEventListenerSafely("ultimaPagina", "click", () => {
         dynamicTable.setNumPagina(dynamicTable.getCantidadPaginas());
         generarContenidoTabla(dynamicTable);
     });
-    document.getElementById("primerPagina").addEventListener("click", e=>{
+
+    // Manija de la primera página
+    addEventListenerSafely("primerPagina", "click", () => {
         dynamicTable.resetNumPagina();
         generarContenidoTabla(dynamicTable);
     });
@@ -297,12 +351,12 @@ function addChart(dynamicTable) {
     let calles={};
 
     dynamicTable.getShownContents().forEach(elem=>{
-        if((elem["comunicationType"]==="Inbound") && (elem["sourceTrunk"]==="TELECOM")){
+        //if((elem["comunicationType"]==="Inbound")){
             if (!calles.hasOwnProperty(elem["callee"]))
                 calles[elem["callee"]] = 1;
             else
                 calles[elem["callee"]] += 1;
-        }
+        //}
     });
     const labels = Object.keys(calles);
     const colors = ['rgb(69,177,223)', 'rgb(99,201,122)', 'rgb(203,82,82)', 'rgb(229,224,88)'];
@@ -344,17 +398,24 @@ function addEventDownloadChart(){
     });
 }
 
-function addEventTargetGrafico(){
-    document.getElementById("opcionGrafico").addEventListener("click", e=>{
-        let grafico=document.getElementById("myChart");
-        if(grafico.style.display==="none"){
-            grafico.style.display="block";
-            document.getElementById("opcionGrafico").textContent="Ocultar grafico";
-        }
-        else
-        if(grafico.style.display==="block"){
-            grafico.style.display="none";
-            document.getElementById("opcionGrafico").textContent="Mostrar grafico";
+function addEventTargetGrafico(dynamicTable) {
+    const button = document.getElementById("opcionGrafico");
+
+    button.addEventListener("click", e => {
+        const buttonText = e.target.textContent;
+        const chartExists = myChart && myChart !== null; // Asegúrate de que myChart esté definido en el scope adecuado
+
+        switch (buttonText) {
+            case "Mostrar grafico":
+                addChart(dynamicTable);
+                e.target.textContent = "Ocultar grafico";
+                break;
+            case "Ocultar grafico":
+                if (chartExists) {
+                    myChart.destroy();
+                }
+                e.target.textContent = "Mostrar grafico";
+                break;
         }
     });
 }
@@ -373,11 +434,10 @@ async function iniciar() {
     generarContenidoTabla(dynamicTable);
     //addEventMostrarColumnas(dynamicTable, tabla);
     addEventFilter(dynamicTable, tabla);
-    addEventPasarPagina(dynamicTable);
+    addPaginationEventListeners(dynamicTable);
     addEventPageLimit(dynamicTable);
     addEventDownload(dynamicTable);
     addEventDownloadChart();
-    addEventTargetGrafico();
-    addChart(dynamicTable);
+    addEventTargetGrafico(dynamicTable);
 
 }
