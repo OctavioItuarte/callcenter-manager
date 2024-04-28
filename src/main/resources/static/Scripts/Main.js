@@ -16,6 +16,7 @@ async function llamarServer(){
         let data = await response.json();
         return (data);
     } catch (error) {
+
         console.log("Hubo un problema con la petición Fetch:" + error.message);
     }
 }
@@ -420,13 +421,27 @@ function addEventTargetGrafico(dynamicTable) {
         }
     });
 }
+
+function handleAuthenticationError(response) {
+    if (response.status === 403 || response.status === 401) {
+        localStorage.removeItem('token');
+
+        window.location.href = '/login';
+    }
+}
 async function iniciar() {
     "use strict"
+
 
     let tabla = document.getElementById("tabla");
     let dynamicTable = new DynamicTable();
 
+
+
+
     let data= await llamarServer();
+
+
 
     dynamicTable.addContents(data);
 
@@ -440,5 +455,7 @@ async function iniciar() {
     addEventDownload(dynamicTable);
     addEventDownloadChart();
     addEventTargetGrafico(dynamicTable);
+
+
 
 }
