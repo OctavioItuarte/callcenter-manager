@@ -1,12 +1,63 @@
+.centrado{
+    display: flex;
+    background-color: aquamarine;
+    justify-content: center;
+    align-content: center;
+}
+
+:root {
+    --color-primario: rgb(50, 200,20)
+}
+
+
+nav {
+    background-color: var(--color-primario)
+}
+
+.navbar-nav .nav-link {
+    font-size: 14px; /* Tamaño del texto más pequeño */
+}
+
 .titulo-principal {
     font-size: 2rem;
     text-align: center;
     padding: 20px 0;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid var(--color-primario)
 }
+
+#main-title {
+    font-size: 3em;
+    margin-bottom: 0;
+}
+
+#sub-title {
+    font-size: 1.2em; /
+    margin-top: 0;
+}
+
+
+
+.tipo_entrada{
+    display:flex;
+}
+
+/*input, select {
+    width: 450px !important;
+} **/
+
+#selecComparador{
+    display:none;
+}
+/*
+.indiceTabla::after{
+    content: "→";
+}*/
 
 #loginForm{
     min-height: 500px;
+}
+#calendars{
+    display:flex;
 }
 
 main{
@@ -14,16 +65,25 @@ main{
 }
 
 footer {
-    background-color: #F8F9FA;
+    background-color: var(--color-primario);
     text-align: center;
     padding: 10px;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Asegura que el footer esté por encima del contenido */
+    z-index: 1000;
 }
 
-#myChart{
-    width: 50px;
+.btn-custom {
+    background-color: var(--color-primario);
+    border-radius: 10px
+}
+
+input {
+    max-width: 550px;
+}
+
+select {
+    max-width: 550px;
 }
