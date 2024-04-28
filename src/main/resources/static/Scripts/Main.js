@@ -1,5 +1,6 @@
 import DynamicTable from "../Scripts/DynamicTable.js";
 
+
 document.addEventListener('DOMContentLoaded', iniciar);
 
 const urlDestino="http://localhost:8080";
@@ -352,10 +353,10 @@ function addChart(dynamicTable) {
 
     dynamicTable.getShownContents().forEach(elem=>{
         //if((elem["comunicationType"]==="Inbound")){
-            if (!calles.hasOwnProperty(elem["callee"]))
-                calles[elem["callee"]] = 1;
-            else
-                calles[elem["callee"]] += 1;
+        if (!calles.hasOwnProperty(elem["callee"]))
+            calles[elem["callee"]] = 1;
+        else
+            calles[elem["callee"]] += 1;
         //}
     });
     const labels = Object.keys(calles);
