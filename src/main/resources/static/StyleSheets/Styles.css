@@ -1,10 +1,3 @@
-.centrado{
-    display: flex;
-    background-color: aquamarine;
-    justify-content: center;
-    align-content: center;
-}
-
 .titulo-principal {
     font-size: 2rem;
     text-align: center;
@@ -12,28 +5,8 @@
     border-bottom: 2px solid #007bff;
 }
 
-
-.tipo_entrada{
-    display:flex;
-}
-
-/*input, select {
-    width: 450px !important;
-} **/
-
-#selecComparador{
-    display:none;
-}
-/*
-.indiceTabla::after{
-    content: "→";
-}*/
-
 #loginForm{
     min-height: 500px;
-}
-#calendars{
-    display:flex;
 }
 
 main{
@@ -49,4 +22,8 @@ footer {
     left: 0;
     width: 100%;
     z-index: 1000; /* Asegura que el footer esté por encima del contenido */
+}
+
+#myChart{
+    width: 50px;
 }

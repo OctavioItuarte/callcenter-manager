@@ -192,6 +192,7 @@ function addEventFilter(dynamicTable){
         dynamicTable.deleteFilter();
         filtrarTabla(dynamicTable);
         dynamicTable.resetNumPagina();
+        addChart(dynamicTable);
         generarContenidoTabla(dynamicTable);
     });
 }
@@ -235,7 +236,6 @@ function addEventPageLimit(dynamicTable){
 async function enviarContenidoDescargable(contenido){
     let data={};
     data.data=contenido;
-    console.log(data);
     try {
         let csvContent = await fetch(urlDestino+'/filesProcessor/tocsv', {
             method: 'POST',
@@ -289,6 +289,75 @@ function addEventMostrarColumnas(dynamicTable, tabla){
     });
 }
 */
+let myChart;
+function addChart(dynamicTable) {
+    if(myChart)
+        myChart.destroy();
+    const graph = document.getElementById('myChart');
+    let calles={};
+
+    dynamicTable.getShownContents().forEach(elem=>{
+        if((elem["comunicationType"]==="Inbound") && (elem["sourceTrunk"]==="TELECOM")){
+            if (!calles.hasOwnProperty(elem["callee"]))
+                calles[elem["callee"]] = 1;
+            else
+                calles[elem["callee"]] += 1;
+        }
+    });
+    const labels = Object.keys(calles);
+    const colors = ['rgb(69,177,223)', 'rgb(99,201,122)', 'rgb(203,82,82)', 'rgb(229,224,88)'];
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            data: Object.values(calles),
+            backgroundColor: colors
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+    };
+
+    myChart=new Chart(graph, config);
+}
+function descargarPDF() {
+    const elemento = document.getElementById('myChart');
+
+    html2canvas(elemento).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jspdf.jsPDF({
+            orientation: 'p',
+            unit: 'px',
+            format: [elemento.offsetWidth, elemento.offsetHeight]
+        });
+        console.log(pdf);
+        pdf.addImage(imgData, 'PNG', 0, 0, elemento.offsetWidth, elemento.offsetHeight);
+        pdf.save('descarga.pdf');
+    });
+}
+function addEventDownloadChart(){
+    document.getElementById("downloadChart").addEventListener("click", e=>{
+        descargarPDF();
+    });
+}
+
+function addEventTargetGrafico(){
+    document.getElementById("opcionGrafico").addEventListener("click", e=>{
+        let grafico=document.getElementById("myChart");
+        if(grafico.style.display==="none"){
+            grafico.style.display="block";
+            document.getElementById("opcionGrafico").textContent="Ocultar grafico";
+        }
+        else
+        if(grafico.style.display==="block"){
+            grafico.style.display="none";
+            document.getElementById("opcionGrafico").textContent="Mostrar grafico";
+        }
+    });
+}
 async function iniciar() {
     "use strict"
 
@@ -307,4 +376,8 @@ async function iniciar() {
     addEventPasarPagina(dynamicTable);
     addEventPageLimit(dynamicTable);
     addEventDownload(dynamicTable);
+    addEventDownloadChart();
+    addEventTargetGrafico();
+    addChart(dynamicTable);
+
 }

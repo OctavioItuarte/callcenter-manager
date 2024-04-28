@@ -105,6 +105,11 @@
     <div>
         <button id="downloadAll">Descargar todo</button>
         <button id="downloadCurrentPage">Descargar pagina actual</button>
+        <button id="downloadChart">Descargar grafico</button>
+    </div>
+    <div>
+        <span id="opcionGrafico">Mostrar grafico</span>
+        <canvas id="myChart"></canvas>
     </div>
     <div class="table-responsive">
         <table class="table table-bordered table-striped-columns" id="tabla" >
@@ -131,8 +136,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script type="module" src="../../static/Scripts/Main.js"></script>
     <script type="module" src="../../static/Scripts/DynamicTable.js"></script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 
 </body>
 </html>
