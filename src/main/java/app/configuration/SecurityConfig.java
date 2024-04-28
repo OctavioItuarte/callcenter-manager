@@ -29,8 +29,6 @@ public class SecurityConfig  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-
-                                .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/static/**").permitAll()
@@ -39,6 +37,7 @@ public class SecurityConfig  {
                                 .requestMatchers(HttpMethod.POST,"/filesProcessor/**").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.POST, "/files/**").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.PATCH, "/files/**").hasAuthority("admin")
+                                .requestMatchers("/register").hasAuthority("admin")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager->
