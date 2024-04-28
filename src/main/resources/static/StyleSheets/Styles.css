@@ -50,3 +50,7 @@ footer {
     width: 100%;
     z-index: 1000; /* Asegura que el footer esté por encima del contenido */
 }
+
+input {
+    max-width: 350px;
+}

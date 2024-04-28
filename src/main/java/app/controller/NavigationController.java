@@ -43,4 +43,11 @@ public class NavigationController {
     }
 
 
+    @GetMapping("/registerUser")
+    public String formUser (Model model, @CookieValue(name = "token") String token ){
+        this.setCredentals(model, token);
+
+        return "/FormUser";
+    }
+
 }
