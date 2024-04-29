@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <div th:if="${token == null}">
+    <div th:if="${not #authorization.expression('isAuthenticated()') or token == null}">
 
         <div th:include="Login.html"> </div>
     </div>
