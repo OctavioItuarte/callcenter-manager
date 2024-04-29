@@ -8,7 +8,7 @@ function iniciar(){
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        fetch(urlDestino+'/login', {
+        fetch(urlDestino + '/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -18,41 +18,28 @@ function iniciar(){
                 "password": password
             })
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Error en las credenciales');
+                    const errorMessage = await response.text();
+                    console.error('Error en la solicitud:', errorMessage);
+                    displayErrorMessage(errorMessage);
+                    throw new Error('Error en la solicitud'); // Lanzar una excepción
                 }
-                location.reload();
-                return response.text();
+                return response.text(); // Continuar si la respuesta es exitosa
             })
             .then(data => {
-                // Guardar el token recibido para futuras solicitudes
                 localStorage.setItem('token', data);
                 console.log('Login exitoso:', data);
-                return data;
-            })
-            .then(data=> {
-                fetch(urlDestino + '/', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                })
-                    .then(response => response.text())
-                /*
-                .then(data => {
-                    console.log(data);
-                    return data;
-                })
-                .then(html => {
-                    document.body.innerHTML=""; //        TODO muy precario!!!!!!!!
-                    document.body.insertAdjacentHTML('beforeend', html)
-                })
-                .catch(error => console.error('Error en la solicitud:', error));
-        })*/
+                location.reload();
             })
             .catch(error => {
-                console.error('Error durante el login:', error);
+                console.error('Error:', error);
             });
     });
+}
+
+function displayErrorMessage(message) {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    errorMessageDiv.textContent = message;
+    errorMessageDiv.style.display = 'block';
 }
