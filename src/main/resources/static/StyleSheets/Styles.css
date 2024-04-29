@@ -62,6 +62,10 @@ nav {
 
 main{
     margin-bottom: 60px;
+  }
+
+thead {
+    background-color: var(--color-primario);
 }
 
 footer {
