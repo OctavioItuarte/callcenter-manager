@@ -33,7 +33,7 @@ const columnNames={
     "pinUser": "Pin User"
 }
 
-function procesarData(data){
+function renombrarAtributosJson(data){
     let resultado=[];
     data.forEach( (e) =>{
         resultado.push({});
@@ -126,14 +126,6 @@ function addEventOrder(dynamicTable) {
     });
 }
 
-function limpiarTabla(idElemento){
-    let elemento=document.getElementById(idElemento);
-    elemento.remove();
-    while (elemento.firstChild) {
-        tbody.removeChild(tbody.firstChild);
-    }
-}
-
 function obtenerValor(selector) {
     return document.getElementById(selector).value;
 }
@@ -143,9 +135,9 @@ function obtenerValorSeleccionado(selector) {
     return elemento.options[elemento.selectedIndex].value;
 }
 
-function aplicarFiltro(dynamicTable, tipo, valor, campo) {
+function aplicarFiltro(dynamicTable, tipo, valor, campo1, campo2 = null) {
     if (valor) { // Solo aplicar filtro si hay un valor
-        dynamicTable.filter(tipo, valor, campo);
+        dynamicTable.filter(tipo, valor, campo1, campo2);
     }
 }
 function pad(num, size) {
@@ -200,7 +192,7 @@ function filtrarTabla(dynamicTable) {
     aplicarFiltro(dynamicTable, "menor", obtenerValor("barra_entrada_date2").replace('T', " "), "time");
     aplicarFiltro(dynamicTable, "igual", obtenerValor("barra_entrada_call_from"), "caller");
     aplicarFiltro(dynamicTable, "igual", obtenerValor("barra_entrada_call_to"), "callee");
-    aplicarFiltro(dynamicTable, "diferencia", obtenerValor("barra_entrada_waiting_time"), "duration");
+    aplicarFiltro(dynamicTable, "diferencia", obtenerValor("barra_entrada_waiting_time"), "duration", "billingDuration");
     aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectStatus"), "disposition");
     aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectCom"), "comunicationType");
     aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectSource"), "sourceTrunk");
@@ -229,10 +221,6 @@ function addEventFilter(dynamicTable){
         dynamicTable.deleteFilter();
         filtrarTabla(dynamicTable);
         dynamicTable.resetNumPagina();
-        if (myChart) {
-            myChart.destroy();
-            document.getElementById("opcionGrafico").textContent = "Mostrar grafico";
-        }
         generarContenidoTabla(dynamicTable);
     });
 }
@@ -319,11 +307,11 @@ async function enviarContenidoDescargable(contenido){
 
 function addEventDownload(dynamicTable){
     document.getElementById("downloadAll").addEventListener("click", e=>{
-        let data=procesarData(dynamicTable.getShownContents());
+        let data=renombrarAtributosJson(dynamicTable.getShownContents());
         enviarContenidoDescargable(data);
     });
     document.getElementById("downloadCurrentPage").addEventListener("click", e=>{
-        let data=procesarData(dynamicTable.getElementosPaginaActual());
+        let data=renombrarAtributosJson(dynamicTable.getElementosPaginaActual());
         enviarContenidoDescargable(data);
     });
 }
@@ -344,11 +332,17 @@ function addEventMostrarColumnas(dynamicTable, tabla){
     });
 }
 */
+
+
+
+
+
+
 let myChart;
-function addChart(dynamicTable) {
+function addChart(dynamicTable, graph) {
     if(myChart)
         myChart.destroy();
-    const graph = document.getElementById('myChart');
+
     let calles={};
 
     dynamicTable.getShownContents().forEach(elem=>{
@@ -371,63 +365,54 @@ function addChart(dynamicTable) {
     };
 
     const config = {
-        type: 'pie',
+        type: 'bar',
         data: data,
     };
 
     myChart=new Chart(graph, config);
 }
-function descargarPDF() {
-    const elemento = document.getElementById('myChart');
 
-    html2canvas(elemento).then(canvas => {
+
+function addEventDownloadChart(dynamicTable){
+    document.getElementById("downloadChart").addEventListener("click", e=>{
+        descargarPDF(dynamicTable);
+    });
+}
+
+function descargarPDF(dynamicTable) {
+    const graph = document.getElementById('primerGrafico');
+    addChart(dynamicTable, graph);
+
+    html2canvas(graph).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
 
         const pdf = new jspdf.jsPDF({
             orientation: 'p',
             unit: 'px',
-            format: [elemento.offsetWidth, elemento.offsetHeight]
+            format: [graph.offsetWidth, graph.offsetHeight]
         });
         console.log(pdf);
-        pdf.addImage(imgData, 'PNG', 0, 0, elemento.offsetWidth, elemento.offsetHeight);
+        pdf.addImage(imgData, 'PNG', 0, 0, graph.offsetWidth, graph.offsetHeight);
         pdf.save('descarga.pdf');
     });
 }
-function addEventDownloadChart(){
-    document.getElementById("downloadChart").addEventListener("click", e=>{
-        descargarPDF();
-    });
-}
 
-function addEventTargetGrafico(dynamicTable) {
-    const button = document.getElementById("opcionGrafico");
-
-    button.addEventListener("click", e => {
-        const buttonText = e.target.textContent;
-        const chartExists = myChart && myChart !== null; // Asegúrate de que myChart esté definido en el scope adecuado
-
-        switch (buttonText) {
-            case "Mostrar grafico":
-                addChart(dynamicTable);
-                e.target.textContent = "Ocultar grafico";
-                break;
-            case "Ocultar grafico":
-                if (chartExists) {
-                    myChart.destroy();
-                }
-                e.target.textContent = "Mostrar grafico";
-                break;
+function procesarData(data){
+    data.forEach( (elem) =>{
+        if(elem.hasOwnProperty("billingDuration") && elem.hasOwnProperty("duration")) {
+            elem["billingDuration"] = parseInt(elem["billingDuration"]);
+            elem["duration"] = parseInt(elem["duration"]);
         }
     });
 }
+
 async function iniciar() {
     "use strict"
-
     let tabla = document.getElementById("tabla");
     let dynamicTable = new DynamicTable();
 
     let data= await llamarServer();
-
+    procesarData(data);
     dynamicTable.addContents(data);
 
     generarIndiceTabla(tabla);
@@ -438,7 +423,6 @@ async function iniciar() {
     addPaginationEventListeners(dynamicTable);
     addEventPageLimit(dynamicTable);
     addEventDownload(dynamicTable);
-    addEventDownloadChart();
-    addEventTargetGrafico(dynamicTable);
+    addEventDownloadChart(dynamicTable);
 
 }

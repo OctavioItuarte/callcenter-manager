@@ -26,13 +26,6 @@ class DynamicTable{
     getSize(){
         return this.shownContents.length;
     }
-
-    getName(){
-        return this.name;
-    }
-    setName(name){
-        this.name=name;
-    }
     addContent(content){
         this.contents.push(content);
     }
@@ -48,7 +41,7 @@ class DynamicTable{
         this.shownContents=this.contents;
     }
 
-    filter(comparable, value, columnName){
+    filter(comparable, value, columnName, extraColumn = null) {
         let compare = (e) => {
             if (value === "") return true;
 
@@ -65,23 +58,26 @@ class DynamicTable{
                     case "content":
                         return value2.includes(value);
                     case "diferencia":
-                        let time1 = parseInt(e["duration"], 10);
-                        let time2 = parseInt(e["billingDuration"], 10);
-                        return (time1 - time2) >= value;
+                        if ((extraColumn) && (e.hasOwnProperty(extraColumn))) {
+                            let time1 = parseInt(value2, 10);
+                            let time2 = parseInt(e[extraColumn], 10);
+                            return (time1 - time2) >= value;
+                        }
+                        return false;
                     default:
                         return false;
                 }
             }
             return false;
-        }
-        this.shownContents=this.shownContents.filter(compare);
+        };
+        this.shownContents = this.shownContents.filter(compare);
         return this.shownContents;
     }
 
     reorder(column, orden){
         let compare = (a, b) => {
-            let valA = (column === "duration" || column === "billingDuration") ? parseInt(a[column], 10) : a[column];
-            let valB = (column === "duration" || column === "billingDuration") ? parseInt(b[column], 10) : b[column];
+            let valA = a[column];
+            let valB = b[column];
 
             if (valA < valB) return orden > 0 ? -1 : 1;
             if (valA > valB) return orden > 0 ? 1 : -1;

@@ -39,17 +39,6 @@ function iniciar(){
                     }
                 })
                     .then(response => response.text())
-                /*
-                .then(data => {
-                    console.log(data);
-                    return data;
-                })
-                .then(html => {
-                    document.body.innerHTML=""; //        TODO muy precario!!!!!!!!
-                    document.body.insertAdjacentHTML('beforeend', html)
-                })
-                .catch(error => console.error('Error en la solicitud:', error));
-        })*/
             })
             .catch(error => {
                 console.error('Error durante el login:', error);
