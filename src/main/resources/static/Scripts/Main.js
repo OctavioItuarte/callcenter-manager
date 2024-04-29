@@ -422,13 +422,7 @@ function addEventTargetGrafico(dynamicTable) {
     });
 }
 
-function handleAuthenticationError(response) {
-    if (response.status === 403 || response.status === 401) {
-        localStorage.removeItem('token');
 
-        window.location.href = '/login';
-    }
-}
 async function iniciar() {
     "use strict"
 
