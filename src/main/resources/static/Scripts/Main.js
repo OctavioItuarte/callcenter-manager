@@ -431,7 +431,11 @@ async function iniciar() {
     let dynamicTable = new DynamicTable();
 
 
-
+    $(document).ready(function() {
+        $("#toggleFiltersButton").click(function() {
+            $("#filtersDiv").toggle();
+        });
+    });
 
     let data= await llamarServer();
 
