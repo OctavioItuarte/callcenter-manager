@@ -15,6 +15,15 @@
                     </div>
                   </div>
                 </div>
+                <div class="user-icon mx-3" id = "user-icon" th:if="${token != null}">
+                    <i class="fas fa-user"></i>
+                </div>
               </nav>
+
+            <div class="user-panel" id="userPanel">
+                <p>Bienvenido  <span th:text="${user}"> </span></p>
+                <button class = "mt-3 mb-3 btn-custom" id = "logout">Cerrar Sesión</button>
+            </div>
     </header>
 
+    <script type="module" src="../../static/Scripts/Header.js"></script>
