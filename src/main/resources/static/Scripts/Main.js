@@ -33,7 +33,7 @@ const columnNames={
     "pinUser": "Pin User"
 }
 
-function renombrarAtributosJson(data){
+function procesarData(data){
     let resultado=[];
     data.forEach( (e) =>{
         resultado.push({});
@@ -405,11 +405,18 @@ function procesarData(data){
         }
     });
 }
-
 async function iniciar() {
     "use strict"
+
     let tabla = document.getElementById("tabla");
     let dynamicTable = new DynamicTable();
+
+
+    $(document).ready(function() {
+        $("#toggleFiltersButton").click(function() {
+            $("#filtersDiv").toggle();
+        });
+    });
 
     let data= await llamarServer();
     procesarData(data);

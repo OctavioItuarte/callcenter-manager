@@ -4,6 +4,7 @@ import app.auth.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,14 +18,17 @@ public class NavigationController {
 
     private void setCredentals(Model model, String token){
         String rol = null;
-        if (token != null) {
-            rol = jwtp.getRoleFromToken(token);
-            String name = jwtp.getNameUserFromToken(token);
-            model.addAttribute("token", token);
-            model.addAttribute("user", name);
+        if (StringUtils.hasText(token)) {
+            if (jwtp.validateToken(token)) {
+                rol = jwtp.getRoleFromToken(token);
+                String name = jwtp.getNameUserFromToken(token);
+                model.addAttribute("token", token);
+                model.addAttribute("user", name);
+            } else {
+                model.addAttribute("token", null);
+            }
         }
         model.addAttribute("rol", rol);
-
     }
 
 
