@@ -7,6 +7,9 @@
 
 :root {
     --color-primario: #30b457;
+    --color-advertencia: #FFFF99;
+    --color-error: #FF6347;
+    --color-exito: #30b457;
 }
 
 
@@ -114,8 +117,19 @@ select {
     max-width: 550px;
 }
 
-#errorMessage{
-    background: tomato;
+.errorMessage{
+    background: var(--color-error);
+    display: none;
+    text-align: center;
+}
+
+.processingMessage{
+    background: var(--color-advertencia);
+    text-align: center;
+}
+
+.serverResponse{
+    background: var(--color-exito);
     display: none;
     text-align: center;
 }

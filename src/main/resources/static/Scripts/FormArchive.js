@@ -13,6 +13,9 @@ async function formArchive() {
             return;
         }
 
+        const processingMessage = document.getElementById('processingMessage');
+        processingMessage.style.display = 'block'; // Mostrar mensaje de procesamiento
+
         const formData = new FormData();
         formData.append('csvFile', fileInput.files[0]);
 
@@ -26,24 +29,31 @@ async function formArchive() {
             });
 
             if (!response.ok) {
-                 const errorMessage = await response.text();
+                const errorMessage = await response.text();
                 console.error('Error en la solicitud:', errorMessage);
                 displayErrorMessage(errorMessage);
             }
 
             const data = await response.text();
             console.log('Respuesta del servidor:', data);
+            displayServerResponse(data);
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            processingMessage.style.display = 'none'; // Ocultar mensaje de procesamiento
         }
     });
-
-
 }
 
 function displayErrorMessage(message) {
     const errorMessageDiv = document.getElementById('errorMessage');
     errorMessageDiv.textContent = message;
     errorMessageDiv.style.display = 'block';
+}
+
+function displayServerResponse(data) {
+    const serverResponseDiv = document.getElementById('serverResponse');
+    serverResponseDiv.textContent = data;
+    serverResponseDiv.style.display = 'block';
 }
 
