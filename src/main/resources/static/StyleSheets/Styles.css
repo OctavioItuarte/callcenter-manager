@@ -91,3 +91,6 @@ select {
     display: none;
     text-align: center;
 }
+#primerGrafico{
+    display:none;
+}

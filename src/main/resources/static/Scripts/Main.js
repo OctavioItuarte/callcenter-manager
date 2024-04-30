@@ -190,8 +190,8 @@ function filtrarTabla(dynamicTable) {
     // Aplicación de filtros
     aplicarFiltro(dynamicTable, "mayor", obtenerValor("barra_entrada_date1").replace('T', " "), "time");
     aplicarFiltro(dynamicTable, "menor", obtenerValor("barra_entrada_date2").replace('T', " "), "time");
-    aplicarFiltro(dynamicTable, "igual", obtenerValor("barra_entrada_call_from"), "caller");
-    aplicarFiltro(dynamicTable, "igual", obtenerValor("barra_entrada_call_to"), "callee");
+    aplicarFiltro(dynamicTable, "content", obtenerValor("barra_entrada_call_from"), "caller");
+    aplicarFiltro(dynamicTable, "content", obtenerValor("barra_entrada_call_to"), "callee");
     aplicarFiltro(dynamicTable, "diferencia", obtenerValor("barra_entrada_waiting_time"), "duration", "billingDuration");
     aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectStatus"), "disposition");
     aplicarFiltro(dynamicTable, "igual", obtenerValorSeleccionado("selectCom"), "comunicationType");
@@ -397,7 +397,7 @@ function descargarPDF(dynamicTable) {
     });
 }
 
-function procesarData(data){
+function renombrarAtributosJson(data){
     data.forEach( (elem) =>{
         if(elem.hasOwnProperty("billingDuration") && elem.hasOwnProperty("duration")) {
             elem["billingDuration"] = parseInt(elem["billingDuration"]);
@@ -430,6 +430,6 @@ async function iniciar() {
     addPaginationEventListeners(dynamicTable);
     addEventPageLimit(dynamicTable);
     addEventDownload(dynamicTable);
-    addEventDownloadChart(dynamicTable);
+    //addEventDownloadChart(dynamicTable);
 
 }

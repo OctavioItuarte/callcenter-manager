@@ -55,8 +55,10 @@ class DynamicTable{
                         return value2 < value;
                     case "igual":
                         return value2 === value;
-                    case "content":
-                        return value2.includes(value);
+                    case "content": {
+                        value = new RegExp(value);
+                        return value.test(value2);
+                    }
                     case "diferencia":
                         if ((extraColumn) && (e.hasOwnProperty(extraColumn))) {
                             let time1 = parseInt(value2, 10);
