@@ -9,6 +9,7 @@ async function formArchive() {
         const fileInput = document.getElementById('myfile');
         if (!fileInput.files || fileInput.files.length === 0) {
             console.error('No se ha seleccionado ningún archivo.');
+            displayErrorMessage('No se ha seleccionado ningún archivo.');
             return;
         }
 
@@ -25,7 +26,9 @@ async function formArchive() {
             });
 
             if (!response.ok) {
-                throw new Error('La solicitud Fetch no fue exitosa: ' + response.status);
+                 const errorMessage = await response.text();
+                console.error('Error en la solicitud:', errorMessage);
+                displayErrorMessage(errorMessage);
             }
 
             const data = await response.text();
@@ -36,5 +39,11 @@ async function formArchive() {
     });
 
 
+}
+
+function displayErrorMessage(message) {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    errorMessageDiv.textContent = message;
+    errorMessageDiv.style.display = 'block';
 }
 

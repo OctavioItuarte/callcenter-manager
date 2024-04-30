@@ -34,7 +34,9 @@ async function formUser(){
             });
 
             if (!response.ok) {
-                throw new Error('La solicitud Fetch no fue exitosa: ' + response.status);
+                const errorMessage = await response.text();
+                console.error(errorMessage);
+                displayErrorMessage(errorMessage);
             }
 
             const data = await response.text();
@@ -47,4 +49,10 @@ async function formUser(){
 
     })
 
+}
+
+function displayErrorMessage(message) {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    errorMessageDiv.textContent = message;
+    errorMessageDiv.style.display = 'block';
 }
