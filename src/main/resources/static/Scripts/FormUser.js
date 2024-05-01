@@ -5,8 +5,14 @@ const urlDestino="http://localhost:8080";
 
 async function formUser(){
 
+    const errorMessageDiv = document.getElementById('errorMessage');
+    const serverResponseDiv = document.getElementById('serverResponse');
+
     document.getElementById('formUser').addEventListener('submit', async function (event) {
         event.preventDefault();
+
+        errorMessageDiv.style.display = 'none';
+        serverResponseDiv.style.display = 'none';
 
         const formDataJson = {
             name: document.getElementById('name').value,
@@ -40,11 +46,11 @@ async function formUser(){
             }
 
             const data = await response.text();
+            displayServerResponse(data);
             console.log('Respuesta del servidor:', data);
         } catch (error) {
             console.error('Error:', error);
         }
-
 
 
     })
@@ -55,4 +61,10 @@ function displayErrorMessage(message) {
     const errorMessageDiv = document.getElementById('errorMessage');
     errorMessageDiv.textContent = message;
     errorMessageDiv.style.display = 'block';
+}
+
+function displayServerResponse(data) {
+    const serverResponseDiv = document.getElementById('serverResponse');
+    serverResponseDiv.textContent = data;
+    serverResponseDiv.style.display = 'block';
 }

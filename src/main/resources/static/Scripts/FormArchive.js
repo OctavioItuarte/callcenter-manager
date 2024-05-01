@@ -3,8 +3,16 @@ document.addEventListener('DOMContentLoaded', formArchive);
 const urlDestino="http://localhost:8080";
 
 async function formArchive() {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    const processingMessage = document.getElementById('processingMessage');
+    const serverResponseDiv = document.getElementById('serverResponse');
+
     document.getElementById('seleccionarArchivo').addEventListener('submit', async function (event) {
         event.preventDefault();
+
+        // Ocultar divs de error y respuesta del servidor
+        errorMessageDiv.style.display = 'none';
+        serverResponseDiv.style.display = 'none';
 
         const fileInput = document.getElementById('myfile');
         if (!fileInput.files || fileInput.files.length === 0) {
@@ -13,7 +21,6 @@ async function formArchive() {
             return;
         }
 
-        const processingMessage = document.getElementById('processingMessage');
         processingMessage.style.display = 'block'; // Mostrar mensaje de procesamiento
 
         const formData = new FormData();
@@ -32,6 +39,7 @@ async function formArchive() {
                 const errorMessage = await response.text();
                 console.error('Error en la solicitud:', errorMessage);
                 displayErrorMessage(errorMessage);
+                return;
             }
 
             const data = await response.text();
@@ -40,7 +48,7 @@ async function formArchive() {
         } catch (error) {
             console.error('Error:', error);
         } finally {
-            processingMessage.style.display = 'none'; // Ocultar mensaje de procesamiento
+            processingMessage.style.display = 'none';
         }
     });
 }
