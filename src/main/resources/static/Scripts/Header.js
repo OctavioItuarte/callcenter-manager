@@ -21,7 +21,7 @@ function toggleUserPanel() {
         let iconRect = icon.getBoundingClientRect();
         let xOffset = 10;
         let panelLeft = iconRect.left - panel.offsetWidth + xOffset;
-        panel.style.top = iconRect.bottom + "px";
+        panel.style.top = iconRect.bottom + "15px";
         panel.style.left = Math.max(panelLeft, 0) + "px";
     }
 }
