@@ -11,5 +11,5 @@ public interface CallRepository extends JpaRepository<Call, Long> {
 
     List<Call> findByFileId(Long fileId);
 
-    List<Call> findBySourceTrunk(String trunk);
+    List<Call> findBySourceTrunkOrderByDestinationTrunk(String trunk);
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/calls")
@@ -36,16 +37,16 @@ public class ApiCallController {
 
         String token = extractTokenFromHeader(request);
         String role = this.jwtTokenProvider.getRoleFromToken(token);
+        String trunk = this.jwtTokenProvider.getTrunkFromToken(token).toUpperCase(Locale.ROOT);
 
         List<CallDTO> calls = new ArrayList<>();
 
-        if (role.equals("admin")) {
+        if (role.equals("admin") || trunk.equals("ALL")) {
             calls.addAll(callService.getAllCalls());
         }
         else{
-                String trunk = this.jwtTokenProvider.getTrunkFromToken(token);
                 System.out.println(trunk);
-                calls.addAll( callService.getCallsBySourceTrunk(trunk));
+                calls.addAll( callService.getCallsBySourceTrunkOrDestinationTrunk(trunk));
             }
         if (calls.isEmpty()) {
             return ResponseEntity.notFound().build();
