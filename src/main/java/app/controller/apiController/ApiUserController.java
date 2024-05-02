@@ -5,18 +5,24 @@ import app.service.AuthService;
 import app.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.naming.AuthenticationException;
+;
 
 
 @RestController
+@Validated
 public class ApiUserController {
 
     @Autowired
@@ -26,19 +32,12 @@ public class ApiUserController {
     private UserService userService;
 
 
+
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        if (userService.existsByEmail(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("El usuario con este correo electrónico ya existe");
-        }
-
+    public ResponseEntity<String> registerUser(@Valid @RequestBody User user) {
         userService.userRegister(user);
-
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuario creado exitosamente");
-
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response) {

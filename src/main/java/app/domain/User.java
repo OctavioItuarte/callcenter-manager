@@ -1,6 +1,10 @@
 package app.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -10,8 +14,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "El nombre no puede ser nulo")
     private String name;
+    @NotNull(message = "La contraseña no puede ser nula")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    @Pattern(regexp = "^(?=.*[A-Z]).+$", message = "La contraseña debe contener al menos una mayúscula")
     private String password;
+    @NotNull(message = "El correo electrónico no puede ser nulo")
+    @Email(message = "Debe ser una dirección de correo electrónico válida")
     private String email;
     private String rol;
     private String trunk;
