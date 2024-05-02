@@ -14,10 +14,11 @@
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/registerUser"> Registrar usuario</a>
                     </div>
                   </div>
+                    <div class="user-icon mx-3 end-0 " id = "user-icon" th:if="${token != null}">
+                        <i class="fas fa-user"></i>
+                    </div>
                 </div>
-                <div class="user-icon mx-3" id = "user-icon" th:if="${token != null}">
-                    <i class="fas fa-user"></i>
-                </div>
+
               </nav>
 
             <div class="user-panel" id="userPanel">

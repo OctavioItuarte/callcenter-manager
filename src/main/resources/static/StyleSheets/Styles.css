@@ -18,7 +18,7 @@ nav {
 }
 
 .user-icon {
-    cursor: pointer;
+    position: relative;
 }
 
 .user-panel {
@@ -36,6 +36,10 @@ nav {
     height: auto;
     display: block;
     margin: 0 auto;
+}
+
+.user-icon:hover .user-panel {
+    display: block;
 }
 
 
@@ -110,11 +114,11 @@ footer {
 }
 
 input {
-    max-width: 550px;
+    max-width: 700px;
 }
 
 select {
-    max-width: 550px;
+    max-width: 700px;
 }
 
 .errorMessage{
