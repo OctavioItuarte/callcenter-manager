@@ -18,7 +18,8 @@ async function formUser(){
             name: document.getElementById('name').value,
             email: document.getElementById('email').value,
             password: document.getElementById('password').value,
-            trunk: document.getElementById('trunk').value
+            trunk: document.getElementById('trunk').value,
+            callTo: document.getElementById('ivr').value
         };
 
 
