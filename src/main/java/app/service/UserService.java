@@ -27,7 +27,7 @@ public class UserService {
     public void userRegister(@Valid User user){
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRol("normal");
+        user.setRole("normal");
         userRepository.save(user);
     }
 
