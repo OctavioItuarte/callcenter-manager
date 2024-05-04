@@ -404,6 +404,7 @@ function renombrarAtributosJson(data){
             elem["duration"] = parseInt(elem["duration"]);
         }
     });
+    return data;
 }
 async function iniciar() {
     "use strict"
