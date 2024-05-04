@@ -2,6 +2,7 @@ package app.service;
 
 import app.auth.JwtTokenProvider;
 import app.domain.User;
+import app.dto.UserDTO;
 import app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +33,9 @@ public class AuthService {
             throw new AuthenticationException("Correo electrónico o contraseña incorrectos");
         }
 
-        return jwtTokenProvider.generateToken(user.getName(), user.getRol(), user.getTrunk());
+        UserDTO userDate = new UserDTO(user);
+
+        return jwtTokenProvider.generateToken(userDate);
     }
 
 

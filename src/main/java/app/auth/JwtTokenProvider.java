@@ -1,6 +1,9 @@
 package app.auth;
 
 
+import app.domain.User;
+import app.dto.UserDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,8 +39,12 @@ public class JwtTokenProvider implements AuthenticationProvider {
         if (!validateToken(token)) {
             return null;
         }
-        String userName = getNameUserFromToken(token);
-        Collection<? extends GrantedAuthority> authorities = getRolesFromToken(token);
+
+        UserDTO userDate = getUserDate(token);
+
+        String userName = userDate.getName();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userDate.getRole());
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(authority);
         return new UsernamePasswordAuthenticationToken(userName, token, authorities);
 
     }
@@ -47,59 +54,26 @@ public class JwtTokenProvider implements AuthenticationProvider {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 
-    public String generateToken(String userName, String role, String trunk) {
+    public String generateToken(UserDTO userDate) {
         Date expirationDate = new Date(System.currentTimeMillis() + jwtExpirationInMs);
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
         return Jwts.builder()
-                .setSubject(userName)
-                .claim("role", role)
-                .claim("trunk", trunk)
+                .claim("userDate", userDate)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String getNameUserFromToken(String token) {
+    public UserDTO getUserDate(String token){
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())
                 .build()
                 .parseClaimsJws(token);
 
-        return claimsJws.getBody().getSubject();
-    }
-
-    public String getRoleFromToken(String token) {
-        Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(token);
-
-        return (String) claimsJws.getBody().get("role");
-    }
-
-    public String getTrunkFromToken(String token){
-        Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(token);
-
-        return (String) claimsJws.getBody().get("trunk");
-    }
-
-    public Collection<? extends GrantedAuthority> getRolesFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        String role = (String) claims.get("role");
-
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-
-        return Collections.singletonList(authority);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(claimsJws.getBody().get("userDate"), UserDTO.class);
     }
 
     public boolean validateToken(String token) {

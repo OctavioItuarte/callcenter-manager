@@ -20,8 +20,8 @@ public class NavigationController {
         String rol = null;
         if (StringUtils.hasText(token)) {
             if (jwtp.validateToken(token)) {
-                rol = jwtp.getRoleFromToken(token);
-                String name = jwtp.getNameUserFromToken(token);
+                rol = jwtp.getUserDate(token).getRole();
+                String name = jwtp.getUserDate(token).getName();
                 model.addAttribute("token", token);
                 model.addAttribute("user", name);
             } else {
