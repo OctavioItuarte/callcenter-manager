@@ -60,7 +60,7 @@ function generarContenido(dynamicTable){
 async function sendData(urlDestino){
     try {
         await fetch(urlDestino, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }

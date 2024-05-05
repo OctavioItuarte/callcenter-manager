@@ -19,7 +19,7 @@ function addEventDelete(){
                 tr=elem.parentElement.parentElement;
                 fileName=tr.querySelector(".name").textContent;
                 console.log(fileName);
-                await sendData("http://localhost:8080/files/{"+fileName+"}");
+                await sendData("http://localhost:8080/files/"+fileName);
             }
         });
     });
