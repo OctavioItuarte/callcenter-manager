@@ -1,6 +1,15 @@
+import {generarIndiceTabla, generarContenido} from "./utils.js";
+import DynamicTable from "./DynamicTable.js";
+
 document.addEventListener('DOMContentLoaded', fileTable);
 
-const urlDestino="localhost:8080/files"
+const urlDestino="http://localhost:8080/files";
+
+const columnNames={
+    "name":"Name",
+    "rows":"Rows",
+    "uploadDate":"Upload date"
+}
 
 async function llamarServer(){
     try {
@@ -19,6 +28,9 @@ async function llamarServer(){
 
 async function fileTable(){
     let data = await llamarServer();
-    console.log(data);
-
+    let tabla=document.getElementById("tableArchive");
+    let dataTable= new DynamicTable();
+    dataTable.addContents(data);
+    generarIndiceTabla(tabla, columnNames);
+    generarContenido(tabla, dataTable);
 }

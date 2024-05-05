@@ -1,5 +1,5 @@
 import DynamicTable from "../Scripts/DynamicTable.js";
-
+import {generarIndiceTabla, generarContenido} from "./utils.js";
 
 document.addEventListener('DOMContentLoaded', iniciar);
 
@@ -33,7 +33,7 @@ const columnNames={
     "pinUser": "Pin User"
 }
 
-function procesarData(data){
+function renombrarAtributosJson(data){
     let resultado=[];
     data.forEach( (e) =>{
         resultado.push({});
@@ -45,50 +45,16 @@ function procesarData(data){
     return resultado;
 }
 
-function generarIndiceTabla(){
-    let thead=document.getElementById("headerTable");
-    let th;
-    thead.remove();
-    thead=document.createElement("thead");
-    thead.id="headerTable";
-    let tabla=document.getElementById("tabla");
-    tabla.prepend(thead);
-    Object.entries(columnNames).forEach(([clave,valor]) => {
-        th= document.createElement("th");
-        th.textContent=valor;
-        th.classList.add("indiceTabla");
-        thead.appendChild(th);
-        th.classList.add(clave);
-    });
-}
-
 function generarContenidoTabla(dynamicTable){
-    let td, tr;
-    let bodyTable=document.getElementById("bodyTable");
 
-    bodyTable.remove();
-    bodyTable=document.createElement("tbody");
-    bodyTable.id="bodyTable";
     let tabla=document.getElementById("tabla");
-    tabla.appendChild(bodyTable);
-    let shownContents=dynamicTable.getElementosPaginaActual();
+    generarContenido(tabla, dynamicTable);
+
 
     document.getElementById("page-number").textContent=dynamicTable.getNumPagina().toString();
     document.getElementById("page-max").textContent=dynamicTable.getCantidadPaginas().toString();
     document.getElementById("cantidadFilas").textContent="Resultado total "+(dynamicTable.getShownContents().length).toString()+" filas";
 
-    shownContents.forEach((call) => {
-        tr= document.createElement("tr");
-        let values=Object.entries(call);
-        values.forEach(([clave, valor]) =>
-        {
-            td= document.createElement("td");
-            td.textContent=valor;
-            tr.appendChild(td);
-            td.classList.add(clave);
-        });
-        bodyTable.appendChild(tr);
-    });
 }
 
 let orders={
@@ -397,7 +363,7 @@ function descargarPDF(dynamicTable) {
     });
 }
 
-function renombrarAtributosJson(data){
+function procesarData(data){
     data.forEach( (elem) =>{
         if(elem.hasOwnProperty("billingDuration") && elem.hasOwnProperty("duration")) {
             elem["billingDuration"] = parseInt(elem["billingDuration"]);
@@ -420,10 +386,10 @@ async function iniciar() {
     });
 
     let data= await llamarServer();
-    procesarData(data);
+    data=procesarData(data);
     dynamicTable.addContents(data);
 
-    generarIndiceTabla(tabla);
+    generarIndiceTabla(tabla, columnNames);
     addEventOrder(dynamicTable, tabla);
     generarContenidoTabla(dynamicTable);
     //addEventMostrarColumnas(dynamicTable, tabla);
