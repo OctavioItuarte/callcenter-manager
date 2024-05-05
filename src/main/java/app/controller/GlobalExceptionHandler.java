@@ -1,5 +1,6 @@
 package app.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,5 +23,10 @@ public class GlobalExceptionHandler {
             errorMessageBuilder.append(error.getDefaultMessage()).append("\n");
         }
         return ResponseEntity.badRequest().body(errorMessageBuilder.toString());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
