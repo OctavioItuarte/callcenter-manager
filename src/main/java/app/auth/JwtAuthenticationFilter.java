@@ -28,13 +28,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = getTokenFromRequest(request);
             if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-                String nombreUsuario = jwtTokenProvider.getNameUserFromToken(token);
-                String rolUsuario = jwtTokenProvider.getRoleFromToken(token);
+                String nombreUsuario = jwtTokenProvider.getUserDate(token).getName();
+                String rolUsuario = jwtTokenProvider.getUserDate(token).getRole();
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(nombreUsuario, null, Collections.singleton(new SimpleGrantedAuthority(rolUsuario)));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            System.out.println("trola");
             logger.error("Error al procesar la autenticación JWT", ex);
         }
 

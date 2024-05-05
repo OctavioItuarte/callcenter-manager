@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "`user`")
@@ -23,8 +26,15 @@ public class User {
     @NotNull(message = "El correo electrónico no puede ser nulo")
     @Email(message = "Debe ser una dirección de correo electrónico válida")
     private String email;
-    private String rol;
+    private String role;
     private String trunk;
+
+    @ElementCollection
+    private Set<String> formatCall;
+
+    public User(){
+        this.formatCall = new HashSet<>();
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -58,12 +68,12 @@ public class User {
         this.email = email;
     }
 
-    public String getRol() {
-        return rol;
+    public String getRole() {
+        return role;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRole(String rol) {
+        this.role = rol;
     }
 
     public String getTrunk() {
@@ -72,5 +82,13 @@ public class User {
 
     public void setTrunk(String trunk) {
         this.trunk = trunk;
+    }
+
+    public Set<String> getFormatCall() {
+        return new HashSet<>(this.formatCall);
+    }
+
+    public void setFormatCall(Set formatCall) {
+        this.formatCall = formatCall;
     }
 }

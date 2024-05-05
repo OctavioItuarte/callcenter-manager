@@ -4,6 +4,7 @@ package app.controller.apiController;
 
 import app.auth.JwtTokenProvider;
 import app.dto.CallDTO;
+import app.dto.UserDTO;
 import app.service.CallService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/calls")
@@ -36,8 +38,12 @@ public class ApiCallController {
     public ResponseEntity<?> getCalls(HttpServletRequest request) {
 
         String token = extractTokenFromHeader(request);
-        String role = this.jwtTokenProvider.getRoleFromToken(token);
-        String trunk = this.jwtTokenProvider.getTrunkFromToken(token).toUpperCase(Locale.ROOT);
+        UserDTO userDate = this.jwtTokenProvider.getUserDate(token);
+        String role = userDate.getRole();
+        String trunk = userDate.getTrunk().toUpperCase(Locale.ROOT);
+        Set<String> format = userDate.getFormatCall();
+
+        System.out.println(format);
 
         List<CallDTO> calls = new ArrayList<>();
 
@@ -45,8 +51,8 @@ public class ApiCallController {
             calls.addAll(callService.getAllCalls());
         }
         else{
+                calls.addAll( callService.getCallsBySourceTrunkOrDestinationTrunk(trunk, format));
                 System.out.println(trunk);
-                calls.addAll( callService.getCallsBySourceTrunkOrDestinationTrunk(trunk));
             }
         if (calls.isEmpty()) {
             return ResponseEntity.notFound().build();

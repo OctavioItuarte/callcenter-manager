@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CallService {
@@ -38,7 +40,11 @@ public class CallService {
 
     }
 
-    public List<CallDTO> getCallsBySourceTrunkOrDestinationTrunk(String trunk) { return this.goToDTO(callRepository.findBySourceTrunkOrderByDestinationTrunk(trunk));}
+    public List<CallDTO> getCallsBySourceTrunkOrDestinationTrunk(String trunk, Set<String> format) {
+        String[] startArray = format.stream().map(s -> s + "%").toArray(String[]::new);
+        System.out.println(Arrays.toString(startArray));
+        System.out.println(trunk);
+        return this.goToDTO(callRepository.findByTrunkAndCallerStartingWith(trunk, startArray));}
 
     public List<CallDTO>getCallsByFileId(Long id){
         return this.goToDTO(this.callRepository.findByFileId(id));
