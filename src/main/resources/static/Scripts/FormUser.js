@@ -26,7 +26,7 @@ async function formUser(){
             email: document.getElementById('email').value,
             password: document.getElementById('password').value,
             trunk: document.getElementById('trunk').value,
-            callTo: numbersCalls
+            formatCall: numbersCalls
         };
 
         const formDataJsonString = JSON.stringify(formDataJson);
@@ -57,6 +57,9 @@ async function formUser(){
         } catch (error) {
             console.error('Error:', error);
         }
+         finally {
+        numbersCalls.splice(0, numbersCalls.length);
+    }
 
     })
 

@@ -45,6 +45,9 @@ public class ApiUserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody User user) {
+        if(this.userService.existsByEmail(user.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El email ya está en uso.");
+        }
         userService.userRegister(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuario creado exitosamente");
     }
