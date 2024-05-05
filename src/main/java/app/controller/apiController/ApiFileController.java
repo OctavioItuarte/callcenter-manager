@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -52,6 +55,18 @@ public class ApiFileController {
             return ResponseEntity.ok().body("Estado del archivo cambiado correctamente");
         } catch (FileNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" No existe un archivo con el id " + fileId);
+        }
+    }
+
+    @DeleteMapping("/{fileName}")
+    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
+        Path filePath = Paths.get(FILE_UPLOAD_PATH, fileName);
+        try {
+            Files.deleteIfExists(filePath);
+            this.fileService.deleteFileByName(fileName);
+            return new ResponseEntity<>("Archivo eliminado con éxito", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("No se pudo eliminar el archivo", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
