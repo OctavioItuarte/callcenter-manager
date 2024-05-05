@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class NavigationController {
@@ -52,6 +51,13 @@ public class NavigationController {
         this.setCredentals(model, token);
 
         return "/FormUser";
+    }
+
+    @GetMapping("/archives")
+    public String tableArchives(Model model,  @CookieValue(name = "token") String token){
+        this.setCredentals(model, token);
+
+        return "/TableArchives";
     }
 
 }
