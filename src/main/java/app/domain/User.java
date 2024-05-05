@@ -36,6 +36,11 @@ public class User {
         this.formatCall = new HashSet<>();
     }
 
+    @PreRemove
+    private void removeFormatCalls() {
+        formatCall.clear();
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
