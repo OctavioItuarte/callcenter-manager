@@ -1,24 +1,9 @@
 import DynamicTable from "../Scripts/DynamicTable.js";
-import {generarIndiceTabla, generarContenido} from "./utils.js";
+import {generarIndiceTabla, generarContenido, getDataServer} from "./utils.js";
 
 document.addEventListener('DOMContentLoaded', iniciar);
 
-const urlDestino="http://localhost:8080";
-
-async function llamarServer(){
-    try {
-        const response = await fetch(urlDestino+'/calls', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
-        });
-        let data = await response.json();
-        return (data);
-    } catch (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-    }
-}
+const urlDestino="http://localhost:8080/calls";
 
 const columnNames={
     "time": "Time",
@@ -46,9 +31,7 @@ function renombrarAtributosJson(data){
 }
 
 function generarContenidoTabla(dynamicTable){
-
-    let tabla=document.getElementById("tabla");
-    generarContenido(tabla, dynamicTable);
+    generarContenido(dynamicTable);
 
 
     document.getElementById("page-number").textContent=dynamicTable.getNumPagina().toString();
@@ -375,9 +358,7 @@ function procesarData(data){
 async function iniciar() {
     "use strict"
 
-    let tabla = document.getElementById("tabla");
-    let dynamicTable = new DynamicTable();
-
+    let data=await getDataServer(urlDestino);
 
     $(document).ready(function() {
         $("#toggleFiltersButton").click(function() {
@@ -385,18 +366,18 @@ async function iniciar() {
         });
     });
 
-    let data= await llamarServer();
+    let dataTable = new DynamicTable();
     data=procesarData(data);
-    dynamicTable.addContents(data);
+    dataTable.addContents(data);
+    generarIndiceTabla(columnNames);
+    generarContenidoTabla(dataTable);
 
-    generarIndiceTabla(tabla, columnNames);
-    addEventOrder(dynamicTable, tabla);
-    generarContenidoTabla(dynamicTable);
+    addEventOrder(dataTable);
     //addEventMostrarColumnas(dynamicTable, tabla);
-    addEventFilter(dynamicTable, tabla);
-    addPaginationEventListeners(dynamicTable);
-    addEventPageLimit(dynamicTable);
-    addEventDownload(dynamicTable);
+    addEventFilter(dataTable);
+    addPaginationEventListeners(dataTable);
+    addEventPageLimit(dataTable);
+    addEventDownload(dataTable);
     //addEventDownloadChart(dynamicTable);
 
 }
