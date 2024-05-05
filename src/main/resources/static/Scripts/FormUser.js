@@ -1,13 +1,20 @@
 document.addEventListener('DOMContentLoaded', formUser);
 
 const urlDestino="http://localhost:8080";
+let numbersCalls=[];
 
+function addEventAddNumber(){
+    document.getElementById("plus-button").addEventListener("click", e=>{
+        numbersCalls.push(document.getElementById("entry-number").value);
+        document.getElementById("entry-number").value="";
+    });
+}
 
 async function formUser(){
 
     const errorMessageDiv = document.getElementById('errorMessage');
     const serverResponseDiv = document.getElementById('serverResponse');
-
+    addEventAddNumber();
     document.getElementById('formUser').addEventListener('submit', async function (event) {
         event.preventDefault();
 
@@ -19,12 +26,10 @@ async function formUser(){
             email: document.getElementById('email').value,
             password: document.getElementById('password').value,
             trunk: document.getElementById('trunk').value,
-            callTo: document.getElementById('ivr').value
+            callTo: numbersCalls
         };
 
-
         const formDataJsonString = JSON.stringify(formDataJson);
-
 
         console.log (formDataJsonString);
 
@@ -52,7 +57,6 @@ async function formUser(){
         } catch (error) {
             console.error('Error:', error);
         }
-
 
     })
 

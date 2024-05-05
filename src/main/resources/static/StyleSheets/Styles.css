@@ -112,3 +112,27 @@ select {
 #primerGrafico{
     display:none;
 }
+
+
+.input-wrapper {
+    position: relative;
+
+}
+.input-text {
+    width: 100%;
+    padding-right: 40px; /* espacio para el botón */
+    box-sizing: border-box; /* incluir padding en el ancho total */
+    height: 36px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+}
+.input-button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 30px;
+    height: 26px;
+    border: none;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
