@@ -1,10 +1,12 @@
 package app.controller.apiController;
 
 import app.domain.User;
+import app.dto.UserDTO;
 import app.service.AuthService;
 import app.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,13 +14,10 @@ import org.springframework.http.ResponseEntity;
 
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-;
+import java.util.List;
 
 
 @RestController
@@ -30,6 +29,17 @@ public class ApiUserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers(){
+        List<UserDTO> users = this.userService.getAllUsers();
+        if(!users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron usarios");
+        }
+    }
 
 
 
@@ -52,6 +62,19 @@ public class ApiUserController {
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correo electrónico o contraseña incorrectos");
         }
+    }
+
+    @Transactional
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<?> deleteUser(@PathVariable String email){
+        boolean deleted = userService.deleteUserByEmail(email);
+
+        if (deleted) {
+            return new ResponseEntity<>("Usuario con el email " + email + " ha sido borrado con exito", HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>("Usuario con el email " + email + " no existe", HttpStatus.NOT_FOUND);
+        }
+
     }
 
 }
