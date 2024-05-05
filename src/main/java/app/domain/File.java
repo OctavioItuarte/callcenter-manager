@@ -17,7 +17,7 @@ public class File {
     private Integer rows;
     private boolean archived;
     private boolean hasError;
-    @OneToMany(mappedBy = "file")
+    @OneToMany(mappedBy = "file", cascade = CascadeType.REMOVE)
     private Set<Call> calls;
 
 

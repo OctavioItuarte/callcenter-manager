@@ -3,10 +3,10 @@ package app.service;
 
 import app.domain.Call;
 import app.domain.File;
-import app.dto.CallDTO;
 import app.dto.FileDTO;
 import app.repository.CallRepository;
 import app.repository.FileRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -16,10 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 import static app.controller.apiController.ApiFileController.FILE_UPLOAD_PATH;
@@ -121,7 +120,6 @@ public class FileService {
 
             System.err.println("Se produjo un error al procesar el archivo: " + e.getMessage());
 
-            e.printStackTrace();
 
             throw new RuntimeException(e);
         }
@@ -134,6 +132,15 @@ public class FileService {
         file.setArchived(!file.isArchived());
 
         fileRepository.save(file);
+    }
+
+    public void deleteFileByName(String fileName) {
+        Optional<File> optionalFile = fileRepository.findFileByName(fileName);
+        if (optionalFile.isPresent()) {
+            fileRepository.delete(optionalFile.get());
+        } else {
+            throw new EntityNotFoundException("No se encontró ningún archivo con el nombre: " + fileName);
+        }
     }
 }
 
