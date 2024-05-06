@@ -1,3 +1,5 @@
+import{displayErrorMessage} from "./utils.js";
+
 document.addEventListener('DOMContentLoaded', iniciar);
 
 const urlDestino="http://localhost:8080";
@@ -23,12 +25,11 @@ function iniciar(){
                     const errorMessage = await response.text();
                     console.error('Error en la solicitud:', errorMessage);
                     displayErrorMessage(errorMessage);
-                    throw new Error('Error en la solicitud'); // Lanzar una excepción
+                    throw new Error('Error en la solicitud');
                 }
-                return response.text(); // Continuar si la respuesta es exitosa
+                return response.text();
             })
             .then(data => {
-                // Guardar el token recibido para futuras solicitudes
                 localStorage.setItem('token', data);
                 console.log('Login exitoso:', data);
                 location.reload();
@@ -39,8 +40,3 @@ function iniciar(){
     });
 }
 
-function displayErrorMessage(message) {
-    const errorMessageDiv = document.getElementById('errorMessage');
-    errorMessageDiv.textContent = message;
-    errorMessageDiv.style.display = 'block';
-}
