@@ -1,4 +1,4 @@
-import {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, sendData} from "./utils.js";
+import {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, addEventDelete} from "./utils.js";
 import DynamicTable from "./DynamicTable.js";
 
 document.addEventListener('DOMContentLoaded', fileTable);
@@ -11,20 +11,6 @@ const columnNames={
     "rows":"Rows"
 }
 
-function addEventDelete(){
-    let tr; let fileName;
-    document.getElementById("button-delete").addEventListener("click",e=>{
-        document.querySelectorAll(".selectFile").forEach(async elem=>{
-            if(elem.checked){
-                tr=elem.parentElement.parentElement;
-                fileName=tr.querySelector(".name").textContent;
-                console.log(fileName);
-                await sendData("http://localhost:8080/files/"+fileName);
-            }
-        });
-    });
-}
-
 async function fileTable(){
     let data = await getDataServer(urlDestino);
     let dataTable = new DynamicTable();
@@ -32,5 +18,5 @@ async function fileTable(){
     generarIndiceTabla(columnNames);
     generarContenido(dataTable);
     generarCheckBox();
-    addEventDelete();
+    addEventDelete("http://localhost:8080/files/", "name");
 }

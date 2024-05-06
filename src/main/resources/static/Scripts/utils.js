@@ -57,7 +57,7 @@ function generarContenido(dynamicTable){
     });
 }
 
-async function sendData(urlDestino){
+async function deleteDataServer(urlDestino){
     try {
         await fetch(urlDestino, {
             method: 'DELETE',
@@ -77,7 +77,7 @@ function generarCheckBox(){
     document.getElementById("bodyTable").querySelectorAll("tr").forEach(elem=>{
         td=document.createElement("td");
         input=document.createElement("input"); input.type="checkbox";
-        input.classList.add("selectFile");
+        input.classList.add("selectRow");
 
         td.appendChild(input);
         elem.prepend(td);
@@ -85,5 +85,18 @@ function generarCheckBox(){
 
 }
 
+function addEventDelete(url, classElem){
+    let tr; let value;
+    document.getElementById("button-delete").addEventListener("click",e=>{
+        document.querySelectorAll(".selectRow").forEach(async elem=>{
+            if(elem.checked){
+                tr=elem.parentElement.parentElement;
+                value=tr.querySelector("."+classElem).textContent;
+                console.log(value);
+                await deleteDataServer(url+value);
+            }
+        });
+    });
+}
 
-export {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, sendData};
+export {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, addEventDelete};
