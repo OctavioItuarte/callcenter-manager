@@ -30,7 +30,7 @@ public class ApiUserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public ResponseEntity<?> getAllUsers(){
         List<UserDTO> users = this.userService.getAllUsers();
         if(!users.isEmpty()) {
