@@ -46,6 +46,7 @@ function generarContenido(dynamicTable){
     shownContents.forEach((call) => {
         tr= document.createElement("tr");
         let values=Object.entries(call);
+        console.log(values);
         values.forEach(([clave, valor]) =>
         {
             td= document.createElement("td");

@@ -7,15 +7,14 @@ const urlDestino="http://localhost:8080/user";
 
 const columnNames={
     "email": "Email",
-    "formatCall": "IVRS",
-    "name": "Name",
     "role": "Role",
-    "trunk": "Trunk"
+    "trunk": "Trunk",
+    "name": "Name",
+    "formatCall": "IVRS"
 }
 
 async function userTable(){
     let data = await getDataServer(urlDestino);
-    console.log(data);
     let dataTable = new DynamicTable();
     dataTable.addContents(data);
     generarIndiceTabla(columnNames);
