@@ -1,3 +1,5 @@
+import{displayErrorMessage, displayServerResponse} from "./utils.js";
+
 document.addEventListener('DOMContentLoaded', formUser);
 
 const urlDestino="http://localhost:8080";
@@ -65,14 +67,4 @@ async function formUser(){
 
 }
 
-function displayErrorMessage(message) {
-    const errorMessageDiv = document.getElementById('errorMessage');
-    errorMessageDiv.textContent = message;
-    errorMessageDiv.style.display = 'block';
-}
 
-function displayServerResponse(data) {
-    const serverResponseDiv = document.getElementById('serverResponse');
-    serverResponseDiv.textContent = data;
-    serverResponseDiv.style.display = 'block';
-}

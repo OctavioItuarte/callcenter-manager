@@ -14,6 +14,7 @@
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/registerUser"> Registrar usuario</a>
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/"> Eliminar usuario</a>
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/archives"> Ver Archivos</a>
+                        <a class="nav-link" th:if="${rol == 'admin'}" href = "/users"> Ver Usuarios</a>
                     </div>
                   </div>
                     <div class="user-icon mx-3 end-0 " id = "user-icon" th:if="${token != null}">
