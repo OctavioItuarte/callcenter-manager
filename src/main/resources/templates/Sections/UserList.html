@@ -13,14 +13,11 @@
 
 <main>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped-columns" id="tableArchive">
-            <thead id="headerTable">
-            </thead>
-            <tbody id="bodyTable">
+    <div class="table-responsive" th:include="Table.html">
 
-            </tbody>
-        </table>
+    </div>
+    <div class = "text-center">
+        <button id="button-delete" type="submit" class="btn btn-primary btn-block mt-4">Eliminar</button>
     </div>
 
 </main>

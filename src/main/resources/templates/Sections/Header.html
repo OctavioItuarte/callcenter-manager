@@ -12,7 +12,6 @@
                         <a class="nav-link" href="/">Inicio</a>
                         <a class="nav-link active" th:if="${rol == 'admin'}" aria-current="page" href="/uploadArchive">Subir Archivos</a>
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/registerUser"> Registrar usuario</a>
-                        <a class="nav-link" th:if="${rol == 'admin'}" href = "/"> Eliminar usuario</a>
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/archives"> Ver Archivos</a>
                         <a class="nav-link" th:if="${rol == 'admin'}" href = "/users"> Ver Usuarios</a>
                     </div>

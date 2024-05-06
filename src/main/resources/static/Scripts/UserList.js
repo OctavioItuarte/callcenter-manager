@@ -1,17 +1,19 @@
 import {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, addEventDelete} from "./utils.js";
 import DynamicTable from "./DynamicTable.js";
 
-document.addEventListener('DOMContentLoaded', fileTable);
+document.addEventListener('DOMContentLoaded', userTable);
 
-const urlDestino="http://localhost:8080/users";
+const urlDestino="http://localhost:8080/user";
 
 const columnNames={
-    "name":"Name",
-    "uploadDate":"Upload date",
-    "rows":"Rows"
+    "email": "Email",
+    "formatCall": "IVRS",
+    "name": "Name",
+    "role": "Role",
+    "trunk": "Trunk"
 }
 
-async function fileTable(){
+async function userTable(){
     let data = await getDataServer(urlDestino);
     console.log(data);
     let dataTable = new DynamicTable();
