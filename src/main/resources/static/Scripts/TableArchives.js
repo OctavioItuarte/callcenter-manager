@@ -20,6 +20,7 @@ function addEventDelete(){
                 fileName=tr.querySelector(".name").textContent;
                 console.log(fileName);
                 await sendData("http://localhost:8080/files/"+fileName);
+                location.reload();
             }
         });
     });
