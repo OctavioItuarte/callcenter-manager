@@ -60,4 +60,11 @@ public class NavigationController {
         return "/TableArchives";
     }
 
+    @GetMapping("/users")
+    public String userList(Model model,  @CookieValue(name = "token") String token){
+        this.setCredentals(model, token);
+
+        return "/UserList";
+    }
+
 }
