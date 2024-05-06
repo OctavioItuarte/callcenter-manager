@@ -43,8 +43,6 @@ public class ApiCallController {
         String trunk = userDate.getTrunk().toUpperCase(Locale.ROOT);
         Set<String> format = userDate.getFormatCall();
 
-        System.out.println(format);
-
         List<CallDTO> calls = new ArrayList<>();
 
         if (role.equals("admin") || trunk.equals("ALL")) {
@@ -52,7 +50,6 @@ public class ApiCallController {
         }
         else{
                 calls.addAll( callService.getCallsBySourceTrunkOrDestinationTrunk(trunk, format));
-                System.out.println(trunk);
             }
         if (calls.isEmpty()) {
             return ResponseEntity.notFound().build();

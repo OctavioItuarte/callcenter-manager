@@ -13,6 +13,6 @@ import java.util.Set;
 public interface CallRepository extends JpaRepository<Call, Long> {
 
     List<Call> findByFileId(Long fileId);
-    @Query(value = "SELECT * FROM call c WHERE (c.source_trunk = :trunk OR c.destination_trunk = :trunk) AND c.caller LIKE ANY (ARRAY[:start])", nativeQuery = true)
-    List<Call> findByTrunkAndCallerStartingWith(@Param("trunk") String trunk, @Param("start") String[] start);
+    @Query(value = "SELECT * FROM call c WHERE (c.source_trunk = :trunk OR c.destination_trunk = :trunk) AND c.callee LIKE ANY (ARRAY[:start])", nativeQuery = true)
+    List<Call> findByTrunkAndCalleeStartingWith(@Param("trunk") String trunk, @Param("start") String[] start);
 }

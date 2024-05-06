@@ -42,9 +42,7 @@ public class CallService {
 
     public List<CallDTO> getCallsBySourceTrunkOrDestinationTrunk(String trunk, Set<String> format) {
         String[] startArray = format.stream().map(s -> s + "%").toArray(String[]::new);
-        System.out.println(Arrays.toString(startArray));
-        System.out.println(trunk);
-        return this.goToDTO(callRepository.findByTrunkAndCallerStartingWith(trunk, startArray));}
+        return this.goToDTO(callRepository.findByTrunkAndCalleeStartingWith(trunk, startArray));}
 
     public List<CallDTO>getCallsByFileId(Long id){
         return this.goToDTO(this.callRepository.findByFileId(id));
