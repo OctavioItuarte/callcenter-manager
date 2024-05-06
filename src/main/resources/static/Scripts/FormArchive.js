@@ -1,3 +1,5 @@
+import{displayErrorMessage, displayServerResponse} from "./utils.js";
+
 document.addEventListener('DOMContentLoaded', formArchive);
 
 const urlDestino="http://localhost:8080";
@@ -10,7 +12,6 @@ async function formArchive() {
     document.getElementById('seleccionarArchivo').addEventListener('submit', async function (event) {
         event.preventDefault();
 
-        // Ocultar divs de error y respuesta del servidor
         errorMessageDiv.style.display = 'none';
         serverResponseDiv.style.display = 'none';
 
@@ -21,8 +22,7 @@ async function formArchive() {
             return;
         }
 
-        processingMessage.style.display = 'block'; // Mostrar mensaje de procesamiento
-
+        processingMessage.style.display = 'block';
         const formData = new FormData();
         formData.append('csvFile', fileInput.files[0]);
 
@@ -53,15 +53,4 @@ async function formArchive() {
     });
 }
 
-function displayErrorMessage(message) {
-    const errorMessageDiv = document.getElementById('errorMessage');
-    errorMessageDiv.textContent = message;
-    errorMessageDiv.style.display = 'block';
-}
-
-function displayServerResponse(data) {
-    const serverResponseDiv = document.getElementById('serverResponse');
-    serverResponseDiv.textContent = data;
-    serverResponseDiv.style.display = 'block';
-}
 

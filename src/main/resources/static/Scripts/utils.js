@@ -85,5 +85,18 @@ function generarCheckBox(){
 
 }
 
+function displayErrorMessage(message) {
+    const errorMessageDiv = document.getElementById('errorMessage');
+    errorMessageDiv.textContent = message;
+    errorMessageDiv.style.display = 'block';
+}
 
-export {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, sendData};
+function displayServerResponse(data) {
+    const serverResponseDiv = document.getElementById('serverResponse');
+    serverResponseDiv.textContent = data;
+    serverResponseDiv.style.display = 'block';
+}
+
+
+
+export {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, sendData, displayErrorMessage, displayServerResponse};
