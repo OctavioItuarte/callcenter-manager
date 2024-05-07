@@ -1,7 +1,7 @@
 :root {
     --color-primario: #30b457;
-    --color-advertencia: #FFFF99;
-    --color-error: #FF6347;
+    --color-advertencia: #CCCC00;
+    --color-error: #FF0000;
     --color-exito: #30b457;
 }
 
@@ -94,18 +94,19 @@ select {
 }
 
 .errorMessage{
-    background: var(--color-error);
+    color: var(--color-error);
     display: none;
     text-align: center;
 }
 
 .processingMessage{
-    background: var(--color-advertencia);
+    color: var(--color-advertencia);
+    display: none;
     text-align: center;
 }
 
 .serverResponse{
-    background: var(--color-exito);
+    color: var(--color-exito);
     display: none;
     text-align: center;
 }
