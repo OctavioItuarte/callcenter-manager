@@ -73,9 +73,9 @@ public class ApiUserController {
         boolean deleted = userService.deleteUserByEmail(email);
 
         if (deleted) {
-            return new ResponseEntity<>("Usuario con el email " + email + " ha sido borrado con exito", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Usuario con el email " + email + " ha sido borrado con exito", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Usuario con el email " + email + " no existe", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Usuario con el email " + email + " no existe o no se puede borrar", HttpStatus.NOT_FOUND);
         }
 
     }
