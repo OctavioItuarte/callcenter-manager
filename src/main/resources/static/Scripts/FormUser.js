@@ -1,8 +1,8 @@
 import{displayErrorMessage, displayServerResponse} from "./utils.js";
+import {URLPOSTREGISTER} from "./constants.js";
 
 document.addEventListener('DOMContentLoaded', formUser);
 
-const urlDestino="http://localhost:8080";
 let numbersCalls=[];
 
 function addEventAddNumber(){
@@ -38,7 +38,7 @@ async function formUser(){
         console.log(localStorage.getItem('token'))
 
         try {
-            const response = await fetch(urlDestino + "/register", {
+            const response = await fetch(URLPOSTREGISTER, {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',

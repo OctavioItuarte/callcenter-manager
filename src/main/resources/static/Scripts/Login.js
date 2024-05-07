@@ -1,8 +1,7 @@
 import{displayErrorMessage} from "./utils.js";
+import {URLPOSTLOGIN} from "./constants.js";
 
 document.addEventListener('DOMContentLoaded', iniciar);
-
-const urlDestino="http://localhost:8080";
 
 function iniciar(){
     document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -10,7 +9,7 @@ function iniciar(){
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        fetch(urlDestino+'/login', {
+        fetch(URLPOSTLOGIN, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,0 +1,9 @@
+export const URL="http://localhost:8080";
+export const URLFILES=URL+"/files";
+export const URLPOSTREGISTER=URL+"/register";
+export const URLPOSTLOGIN=URL+"/login";
+export const URLGETCALLS=URL+"/calls";
+export const URLPOSTCSV=URL+"/filesProcessor/tocsv";
+export const URLDELETEFILES=URL+"/files/";
+export const URLGETUSER=URL+"/user";
+export const URLDELETEUSER=URL+"/delete/";
