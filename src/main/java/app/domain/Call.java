@@ -106,8 +106,8 @@ public class Call {
         return communicationType;
     }
 
-    public void setCommunicationType(String comunicationType) {
-        this.communicationType = comunicationType;
+    public void setCommunicationType(String communicationType) {
+        this.communicationType = communicationType;
     }
 
     public String getPinUser() {

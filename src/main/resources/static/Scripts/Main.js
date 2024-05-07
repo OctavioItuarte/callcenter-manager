@@ -13,7 +13,7 @@ const columnNames={
     "disposition": "Disposition",
     "sourceTrunk": "Source Trunk",
     "destinationTrunk": "Destination Trunk",
-    "comunicationType": "Communication Type",
+    "communicationType": "Communication Type",
     "pinUser": "Pin User"
 }
 
@@ -48,7 +48,7 @@ let orders={
     "disposition": 0,
     "sourceTrunk": 0,
     "destinationTrunk": 0,
-    "comunicationType": 0,
+    "communicationType": 0,
     "pinUser": 0
 }
 
