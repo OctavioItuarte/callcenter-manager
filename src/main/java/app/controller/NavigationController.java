@@ -14,6 +14,9 @@ public class NavigationController {
     @Autowired
     private JwtTokenProvider jwtp;
 
+    private boolean onlyAdmin(String token){
+        return !this.jwtp.getUserDate(token).getRole().equals("admin");
+    }
 
     private void setCredentals(Model model, String token){
         String rol = null;
@@ -40,8 +43,10 @@ public class NavigationController {
 
     @GetMapping("/uploadArchive")
     public String formArchived(Model model, @CookieValue(name = "token") String token) {
-
         this.setCredentals(model, token);
+        if(this.onlyAdmin(token)) {
+            return "/Home";
+        }
         return "/Form";
     }
 
@@ -49,21 +54,27 @@ public class NavigationController {
     @GetMapping("/registerUser")
     public String formUser (Model model, @CookieValue(name = "token") String token ){
         this.setCredentals(model, token);
-
+        if(this.onlyAdmin(token)) {
+            return "/Home";
+        }
         return "/FormUser";
     }
 
     @GetMapping("/archives")
     public String tableArchives(Model model,  @CookieValue(name = "token") String token){
         this.setCredentals(model, token);
-
+        if(this.onlyAdmin(token)) {
+            return "/Home";
+        }
         return "/TableArchives";
     }
 
     @GetMapping("/users")
     public String userList(Model model,  @CookieValue(name = "token") String token){
         this.setCredentals(model, token);
-
+        if(this.onlyAdmin(token)) {
+            return "/Home";
+        }
         return "/UserList";
     }
 
