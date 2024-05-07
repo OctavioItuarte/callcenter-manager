@@ -38,7 +38,7 @@ public class UserService {
     }
 
     public List<UserDTO> getAllUsers(){
-        return this.goToDTO(this.userRepository.findAll());
+        return this.goToDTO(this.userRepository.findAllNonAdminUsers());
     }
 
 
@@ -61,6 +61,9 @@ public class UserService {
         Optional<User> user = this.userRepository.findByEmail(email);
 
         if(user.isPresent()){
+            if(user.get().getRole().equals("admin")) {
+                return false;
+            }
             this.userRepository.deleteUserByEmail(email);
             return true;
         }
