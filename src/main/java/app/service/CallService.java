@@ -28,7 +28,7 @@ public class CallService {
             callDTO.setDestinationTrunk(call.getDestinationTrunk());
             callDTO.setSourceTrunk(call.getSourceTrunk());
             callDTO.setDuration(call.getDuration());
-            callDTO.setComunicationType(call.getComunicationType());
+            callDTO.setCommunicationType(call.getCommunicationType());
             callDTO.setDisposition(call.getDisposition());
             callDTO.setBillingDuration(call.getBillingDuration());
             callDTO.setPinUser(call.getPinUser());

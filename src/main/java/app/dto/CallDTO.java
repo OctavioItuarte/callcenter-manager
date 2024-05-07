@@ -17,7 +17,7 @@ public class CallDTO {
     private String disposition;
     private String sourceTrunk;
     private String destinationTrunk;
-    private String comunicationType;
+    private String communicationType;
     private String pinUser;
 
     public CallDTO() {
@@ -88,12 +88,12 @@ public class CallDTO {
         this.destinationTrunk = destinationTrunk;
     }
 
-    public String getComunicationType() {
-        return comunicationType;
+    public String getCommunicationType() {
+        return communicationType;
     }
 
-    public void setComunicationType(String comunicationType) {
-        this.comunicationType = comunicationType;
+    public void setCommunicationType(String comunicationType) {
+        this.communicationType = comunicationType;
     }
 
     public String getPinUser() {

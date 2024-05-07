@@ -102,7 +102,7 @@ public class FileService {
                 call.setDuration(parts[5] .replaceAll("^\"|\"$", "") );
                 call.setBillingDuration(parts[6] .replaceAll("^\"|\"$", "") );
                 call.setDisposition(parts[7] .replaceAll("^\"|\"$", "") );
-                call.setComunicationType(parts[8] .replaceAll("^\"|\"$", "") );
+                call.setCommunicationType(parts[8] .replaceAll("^\"|\"$", "") );
                 call.setPinUser((parts[9] .replaceAll("^\"|\"$", "") ));
                 call.setFile(file);
                 callRepository.save(call);
