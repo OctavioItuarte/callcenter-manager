@@ -1,8 +1,8 @@
 import{displayErrorMessage, displayServerResponse} from "./utils.js";
+import {URLFILES} from "./constants.js";
 
 document.addEventListener('DOMContentLoaded', formArchive);
 
-const urlDestino="http://localhost:8080";
 
 async function formArchive() {
     const errorMessageDiv = document.getElementById('errorMessage');
@@ -27,7 +27,7 @@ async function formArchive() {
         formData.append('csvFile', fileInput.files[0]);
 
         try {
-            const response = await fetch(urlDestino + "/files", {
+            const response = await fetch(URLFILES, {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')

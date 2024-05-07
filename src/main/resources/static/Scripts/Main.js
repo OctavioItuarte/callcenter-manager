@@ -1,9 +1,8 @@
 import DynamicTable from "../Scripts/DynamicTable.js";
 import {generarIndiceTabla, generarContenido, getDataServer} from "./utils.js";
+import {URLPOSTCSV, URLGETCALLS} from "./constants.js";
 
 document.addEventListener('DOMContentLoaded', iniciar);
-
-const urlDestino="http://localhost:8080/calls";
 
 const columnNames={
     "time": "Time",
@@ -229,9 +228,10 @@ async function enviarContenidoDescargable(contenido){
     let data={};
     data.data=contenido;
     try {
-        let csvContent = await fetch(urlDestino+'/filesProcessor/tocsv', {
+        let csvContent = await fetch(URLPOSTCSV, {
             method: 'POST',
             headers: {
+                'Content-Type' : 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify(data),
@@ -358,7 +358,7 @@ function procesarData(data){
 async function iniciar() {
     "use strict"
 
-    let data=await getDataServer(urlDestino);
+    let data=await getDataServer(URLGETCALLS);
 
     $(document).ready(function() {
         $("#toggleFiltersButton").click(function() {

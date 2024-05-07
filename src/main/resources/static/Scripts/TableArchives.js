@@ -1,9 +1,8 @@
 import {generarIndiceTabla, generarContenido, getDataServer, generarCheckBox, addEventDelete} from "./utils.js";
 import DynamicTable from "./DynamicTable.js";
+import {URLFILES, URLDELETEFILES} from "./constants.js";
 
 document.addEventListener('DOMContentLoaded', fileTable);
-
-const urlDestino="http://localhost:8080/files";
 
 const columnNames={
     "name":"Name",
@@ -12,11 +11,11 @@ const columnNames={
 }
 
 async function fileTable(){
-    let data = await getDataServer(urlDestino);
+    let data = await getDataServer(URLFILES);
     let dataTable = new DynamicTable();
     dataTable.addContents(data);
     generarIndiceTabla(columnNames);
     generarContenido(dataTable);
     generarCheckBox();
-    addEventDelete("http://localhost:8080/files/", "name");
+    addEventDelete(URLDELETEFILES, "name");
 }
