@@ -60,12 +60,17 @@ function generarContenido(dynamicTable){
 
 async function deleteDataServer(urlDestino){
     try {
-        await fetch(urlDestino, {
+        let response = await fetch(urlDestino, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
+        let data = await response.text();
+        displayServerResponse(data);
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
     } catch (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
     }
@@ -94,7 +99,7 @@ function addEventDelete(url, classElem){
                 tr=elem.parentElement.parentElement;
                 value=tr.querySelector("."+classElem).textContent;
                 console.log(value);
-                await deleteDataServer(url+value);
+                await deleteDataServer(url + value);
             }
         });
     });
