@@ -3,11 +3,30 @@
     --color-advertencia: #cc7a00;
     --color-error: #FF0000;
     --color-exito: #30b457;
+    --color-blanco-letra: #F5F5F5;
+    --color-background: #F0F0F0;
+}
+
+.body-bg{
+    background-color: var(--color-background);
 }
 
 
 nav {
+    color: var(--color-blanco-letra);
     background-color: var(--color-primario)
+}
+
+nav a{
+    text-decoration: none;
+    margin-right: 20px;
+    color: var(--color-blanco-letra);
+}
+
+
+
+.color-tabla{
+    color: var(--color-blanco-letra);
 }
 
 .user-icon {
@@ -71,6 +90,7 @@ thead {
 }
 
 footer {
+    color: var(--color-blanco-letra);
     background-color: var(--color-primario);
     text-align: center;
     padding: 10px;
@@ -90,8 +110,11 @@ footer img{
 }
 
 .btn-custom {
+    color: var(--color-blanco-letra);
     background-color: var(--color-primario);
-    border-radius: 10px
+    border-radius: 10px;
+    border-color: var(--color-primario);
+    font-weight: bold;
 }
 
 input {
