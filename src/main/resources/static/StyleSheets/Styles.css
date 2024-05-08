@@ -1,6 +1,6 @@
 :root {
     --color-primario: #30b457;
-    --color-advertencia: #CCCC00;
+    --color-advertencia: #cc7a00;
     --color-error: #FF0000;
     --color-exito: #30b457;
 }
@@ -37,7 +37,8 @@ nav {
 
 
 .navbar-nav .nav-link {
-    font-size: 14px;
+    font-size: 20px;
+
 }
 
 .titulo-principal {
@@ -62,7 +63,7 @@ nav {
 }
 
 main{
-    margin-bottom: 60px;
+    margin-bottom: 100px;
 }
 
 thead {
@@ -78,6 +79,14 @@ footer {
     left: 0;
     width: 100%;
     z-index: 1000;
+}
+footer p{
+    margin-bottom:5px;
+}
+
+footer img{
+
+    width: 100%;
 }
 
 .btn-custom {
