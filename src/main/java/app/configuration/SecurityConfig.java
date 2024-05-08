@@ -37,6 +37,7 @@ public class SecurityConfig  {
                                 .requestMatchers("/archives").permitAll()
                                 .requestMatchers("/users").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/filesProcessor/**").permitAll()
+                                .requestMatchers("/user").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.POST, "/files/**").hasAuthority("admin")
                                 .requestMatchers(HttpMethod.PATCH, "/files/**").hasAuthority("admin")
                                 .requestMatchers("/register").hasAuthority("admin")
